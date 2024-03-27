@@ -1,30 +1,41 @@
 # tg-bot-revit-project
-
-# foodgram
-# Описание проекта
-Проект foodgram представляет собой сайт, где можно найти рецепты, поделится рецептами.
-Подписаться на понравившихся авторов рецептов. На основе этих рецептов перед походом
-в магазин можно получить список рецептов и т.д
+Проект представляет собой
 
 # Технологии
 Python 3.11
 Telegram API
-Google Sheet API
+Google Sheets API
 Google Disk API
 
 # Авторы
 BlopFlop(ArturYoungBlood)
 
-# Инструкция
+
+# Документация
+Telegram API - https://docs.python-telegram-bot.org/en/v21.0.1/
+Google Sheets API - https://developers.google.com/sheets?hl=ru
+Google Disk API - https://developers.google.com/drive?hl=ru
+
+
+# Инструкции
+Создать телеграм бота, ссылка на инструкцию:
+```
+https://habr.com/ru/articles/442800/
+```
+Создать проект на https://console.cloud.google.com/, подллючить к нему Google Sheets API, Google Drive API
+
+
 Клонировать репозиторий и перейти в него в командной строке:
 
 ```
 git@github.com:BlopFlop/tg-bot-revit-project.git
 ```
+
+```
 cd /tg-bot-revit-project.git
 ```
+
 Cоздать и активировать виртуальное окружение:
-```
 
 ```
 py -3.11 -m venv venv
@@ -43,4 +54,5 @@ py -3.11 -m pip install --upgrade pip
 ```
 pip install -r requirements.txt
 ```
+
 

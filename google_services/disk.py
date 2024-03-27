@@ -1,5 +1,4 @@
 import os
-import sys
 
 from oauth2client.service_account import ServiceAccountCredentials
 from googleapiclient.http import MediaFileUpload
