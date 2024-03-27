@@ -6,14 +6,14 @@ import subprocess
 import shutil
 import sys
 
-from google_tab import get_nwc_paths, get_nwd_paths
+from google_services.tab import get_nwc_paths, get_nwd_paths
 from tg_bot import send_message
 
-from constants import (
+from settings.constants import (
     NAWIS_OR_REVIT_VERSION, PATH_NAWIS_FTR, PATH_NAWIS_ROAMER, FIRST_FLAG,
     SECOND_FLAG, THIRD_FLAG, NWF_EXTENTION, NWC_EXTENTION,
     NWD_EXTENTION, FLAG_NWD, PATH_COPY_DIR, COUNT_RUN_MULTIPROSECCING,
-    SECONDS_IN_MINUTE
+    SECONDS_IN_MINUTE, DATE_NOW
 )
 
 
@@ -117,7 +117,7 @@ def create_nwd_file(end_path_nwd: str, source_path_nwf: str) -> str:
 
 def start_create_file_nwd(source_path_nwf: str, load_dir: str) -> str:
     '''Старт создания nawis файла'''
-    time_name = str(dt.now().strftime("%d-%m-%y_%H-%M"))
+    time_name = str(dt.now().strftime(DATE_NOW + '_%H-%M'))
     name_file = (
         ''.join(os.path.basename(source_path_nwf).split('.')[:-1])
         + time_name + NWD_EXTENTION

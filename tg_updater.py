@@ -6,9 +6,9 @@ import logging
 from telegram import ReplyKeyboardMarkup
 from telegram.ext import CommandHandler, PrefixHandler
 
-from google_tab import get_nwd_paths
-from constants import (
-    FILE_LOAD_FTP, FILE_PUB_MODELS, FILE_LOAD_NAWIS, NAME_JSON_FILE,
+from google_services.tab import get_nwd_paths
+from settings.constants import (
+    FILE_LOAD_FTP, FILE_PUB_MODELS, FILE_LOAD_NAWIS, PATH_CHATS_JSON,
     NAME_PROJECT, UPDATER, BOT_INFO_MESSAGE, LOAD_FTP_START_MESSAGE,
     LOAD_NAWIS_START_MESSAGE, PUBLISH_MODELS_MESSAGE, FILE_NAME_LOG,
     FILE_DEPLOY_ALBUM
@@ -31,21 +31,9 @@ logging.basicConfig(
 )
 
 
-def get_json():
-    '''Получение json, в папке с проектом.'''
-    # dirname = os.path.dirname(sys.executable)
-    dirname = os.path.dirname(__file__)
-    path_json = os.path.join(dirname, NAME_JSON_FILE)
-    if not os.path.isfile(path_json):
-        file = open(path_json, 'w+')
-        file.write('{}')
-        file.close()
-    return path_json
-
-
 def remove_in_project(update, context):
     '''Удаление человека из проекта.'''
-    with open(get_json(), 'r') as json_file:
+    with open(PATH_CHATS_JSON, 'r') as json_file:
         data = json.load(json_file)
     chat = update.effective_chat
     message = 'Вы были удалены из рассылки по проекту.'
@@ -55,7 +43,7 @@ def remove_in_project(update, context):
     else:
         message = 'Вас нет в рассылке'
 
-    with open(get_json(), 'w') as json_file:
+    with open(PATH_CHATS_JSON, 'w') as json_file:
         json.dump(data, json_file)
 
     context.bot.send_message(chat_id=chat.id, text=message)
@@ -63,7 +51,7 @@ def remove_in_project(update, context):
 
 def add_in_project(update, context):
     '''Добавление человека в проект.'''
-    with open(get_json(), 'r') as json_file:
+    with open(PATH_CHATS_JSON, 'r') as json_file:
         data = json.load(json_file)
     chat = update.effective_chat
     message = 'Вы были добавлены в рассылку по проекту.'
@@ -72,7 +60,7 @@ def add_in_project(update, context):
         message = 'Вы уже рассылке'
     else:
         data[chat.id] = update.message.chat.first_name
-        with open(get_json(), 'w') as json_file:
+        with open(PATH_CHATS_JSON, 'w') as json_file:
             json.dump(data, json_file)
 
     context.bot.send_message(chat_id=chat.id, text=message)
@@ -97,13 +85,13 @@ def wake_up(update, context):
         chat_id=chat.id, text=message, reply_markup=button
     )
 
-    with open(get_json(), 'r') as json_file:
+    with open(PATH_CHATS_JSON, 'r') as json_file:
         data = json.load(json_file)
 
     if str(chat.id) not in data.keys():
         data[chat.id] = name
 
-        with open(get_json(), 'w') as file:
+        with open(PATH_CHATS_JSON, 'w') as file:
             json.dump(data, file)
 
 

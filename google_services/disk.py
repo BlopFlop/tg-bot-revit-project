@@ -1,11 +1,12 @@
 import os
+import sys
 
 from oauth2client.service_account import ServiceAccountCredentials
 from googleapiclient.http import MediaFileUpload
 import httplib2
 import apiclient
 
-from constants import CREDENTIALS_FILE_PATH, GOOGLE_DISK_FOLDER_ID
+from settings.constants import CREDENTIALS_FILE_PATH
 
 
 def check_cred() -> None | Exception:

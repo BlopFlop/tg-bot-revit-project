@@ -5,15 +5,13 @@ import sys
 
 from googleapiclient.errors import ResumableUploadError
 
-from google_tab import (
-    get_dir_paths, get_publish_paths
-)
-from google_disk import load_file_in_google_disk
+from google_services.tab import get_dir_paths, get_publish_paths
+from google_services.disk import load_file_in_google_disk
 from model_nawisworks import search_file
 from tg_bot import send_message
-from send_mail import send_email
+from mail.func import send_email
 
-from constants import (
+from settings.constants import (
     NAME_PROJECT, TO_EMAIL_USER, NAME_FIELD_PUBLISH, GOOGLE_DISK_FOLDER_ID,
     FAMILY_NAME_BIM_SPECIALIST, PHONE_NUMBER_BIM_SPECIALIST, SECONDS_IN_MINUTE
 )
@@ -71,14 +69,13 @@ if __name__ == '__main__':
     )
     try:
         google_disk_url = main()
-    except ResumableUploadError as ex:
+    except ResumableUploadError:
         error_message = (
             'При загрузке файла на Google Disk произошла ошибка. '
             'Google хранилище переполнено, архив с проектом доступен на FTP, '
             'сообщение на почту заказчика НЕ было отправлено.'
         )
         send_message(error_message)
-        raise ex
         sys.exit()
 
     time_work = (dt.now() - time_work).seconds // SECONDS_IN_MINUTE

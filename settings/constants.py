@@ -1,10 +1,21 @@
+from datetime import datetime as dt
 import os
+import sys
 
 from dotenv import load_dotenv
 from telegram import Bot
 from telegram.ext import Updater
 
 load_dotenv()
+
+
+def check_file(file_path, except_message) -> None | Exception:
+    if not os.path.isfile(file_path):
+        raise FileNotFoundError(except_message)
+
+
+DATE_MASK = '%Y-%m-%d'
+DATE_NOW = dt.now().strftime(DATE_MASK)
 
 
 # env const
@@ -27,15 +38,27 @@ FAMILY_NAME_BIM_SPECIALIST = (
 )
 PHONE_NUMBER_BIM_SPECIALIST = os.getenv('PHONE_NUMBER_BIM_SPECIALIST')
 
-
 # paths const
+NAME_CREDS_JSON = 'creds.json'
+NAME_CHATS_JSON = 'chats.json'
+
 PATH_FOLDER = os.path.dirname(__file__)
-CREDENTIALS_FILE_PATH = os.path.join(PATH_FOLDER, 'creds.json')
-PATH_COPY_DIR = os.path.join(PATH_FOLDER, 'load_nawis')
-FILE_LOAD_FTP = os.path.join(PATH_FOLDER, 'model_ftp.py')
-FILE_PUB_MODELS = os.path.join(PATH_FOLDER, 'model_publish.py')
-FILE_LOAD_NAWIS = os.path.join(PATH_FOLDER, 'model_nawisworks.py')
-FILE_DEPLOY_ALBUM = os.path.join(PATH_FOLDER, 'model_arch.py')
+BASE_DIR = os.path.dirname(PATH_FOLDER)
+
+CREDENTIALS_FILE_PATH = os.path.join(PATH_FOLDER, NAME_CREDS_JSON)
+PATH_CHATS_JSON = os.path.join(os.path.dirname(__file__), NAME_CHATS_JSON)
+
+PATH_COPY_DIR = os.path.join(BASE_DIR, 'load_nawis')
+FILE_LOAD_FTP = os.path.join(BASE_DIR, 'model_ftp.py')
+FILE_PUB_MODELS = os.path.join(BASE_DIR, 'model_publish.py')
+FILE_LOAD_NAWIS = os.path.join(BASE_DIR, 'model_nawisworks.py')
+FILE_DEPLOY_ALBUM = os.path.join(BASE_DIR, 'model_arch.py')
+
+sys.path.append(BASE_DIR)
+check_file(
+    PATH_CHATS_JSON,
+    f'Файла {NAME_CHATS_JSON} нет в папке settings.'
+)
 
 # google const
 NAME_SHEET_DIR_PATH = '00_Dir_paths'
@@ -51,12 +74,9 @@ NAME_FIELD_PUBLISH = '06_Publish'
 START_LOAD_MODEL = '<< Начало выгрузки моделей из Ревит сервера >>'
 END_LOAD_MODEL = '<< Конец выгрузки моделей из Ревит сервера >>'
 
-
 # tg bot const
 BOT = Bot(token=TG_TOKEN)
 UPDATER = Updater(token=TG_TOKEN)
-
-NAME_JSON_FILE = 'chats.json'
 
 BOT_INFO_MESSAGE = (
     'Доступные команды:\n'
@@ -70,7 +90,7 @@ BOT_INFO_MESSAGE = (
     '• /publish_models - Публикация моделей заказчику.\n'
     '• #d <Имя альбома> - Архивация моделей после выдачи альбомов '
     'Пример: вписав команду << #d 01AR 02AR >> вам создадут архив с именем'
-    '<< 01.99.1999_RVT_01AR-02AR >>'
+    f'<< {DATE_NOW}_RVT_01AR-02AR >>'
 )
 
 DEPLOY_ALBUM_START_MESSAGE = (

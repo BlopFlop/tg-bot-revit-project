@@ -9,7 +9,7 @@ from email.mime.image import MIMEImage
 from email.mime.audio import MIMEAudio
 from email.mime.multipart import MIMEMultipart
 
-from constants import (
+from settings.constants import (
     EMAIL_HOST, EMAIL_PORT, EMAIL_HOST_USER, EMAIL_HOST_PASSWORD,
 )
 
@@ -19,8 +19,7 @@ def send_email(
         theme_message: str,
         text_message: str,
         files: list | tuple | set | None = None):
-    '''Отправка сообщения через почтовый ящик,
-    в том числе возможно передавать файлы'''
+    '''Отправка сообщения через почтовый ящик (возможно передавать файлы)'''
     addr_from = EMAIL_HOST_USER
     password = EMAIL_HOST_PASSWORD
 

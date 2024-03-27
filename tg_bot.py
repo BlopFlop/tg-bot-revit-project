@@ -4,9 +4,9 @@ import time
 import json
 import logging
 
-from google_tab import get_dir_paths
-from constants import (
-    BOT, NAME_JSON_FILE, FILE_NAME_LOG, RVT_EXTENTION, NAME_SHEET_FTP
+from google_services.tab import get_dir_paths
+from settings.constants import (
+    BOT, PATH_CHATS_JSON, FILE_NAME_LOG, RVT_EXTENTION, NAME_SHEET_FTP
 )
 
 
@@ -15,18 +15,6 @@ logging.basicConfig(
     level=logging.DEBUG,
     format='%(asctime)s, [%(levelname)s] %(message)s',
 )
-
-
-def get_json() -> None:
-    '''Получение json файла.'''
-    # dirname = path.dirname(sys.executable)
-    dirname = path.dirname(__file__)
-    path_json = path.join(dirname, NAME_JSON_FILE)
-    if not path.isfile(path_json):
-        message = f'Файла {NAME_JSON_FILE} нет в папке со скриптом.'
-        logging.error(message)
-        raise FileNotFoundError(message)
-    return path_json
 
 
 def get_info_file(path_dir: str) -> dict[str: int]:
@@ -47,7 +35,7 @@ def get_info_file(path_dir: str) -> dict[str: int]:
 
 def get_chat_ids():
     '''Получение всех айди чатов'''
-    with open(get_json(), 'r') as json_file:
+    with open(PATH_CHATS_JSON, 'r') as json_file:
         chat = json.load(json_file)
     return chat.keys()
 

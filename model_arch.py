@@ -5,12 +5,13 @@ import sys
 
 import shutil
 
-from google_tab import get_archive_paths
+from google_services.tab import get_archive_paths
 from tg_bot import send_message
 
-from constants import (
+from settings.constants import (
     ARCH_START_MESSAGE, ARCH_END_MESSAGE, EXTENSION_FILE,
-    DEPLOY_ALBUM_START_MESSAGE, DEPLOY_ALBUM_END_MESSAGE
+    DEPLOY_ALBUM_START_MESSAGE, DEPLOY_ALBUM_END_MESSAGE,
+    DATE_MASK
 )
 
 
@@ -36,7 +37,7 @@ def get_path_for_extension(path_dir: str) -> list[str]:
 
 def make_dir(path: str, name_dir: str) -> str:
     '''Создание папки для копирования туда файлов'''
-    name_args = [time_start.strftime('%Y-%m-%d'), name_dir]
+    name_args = [time_start.strftime(DATE_MASK), name_dir]
 
     if len(sys.argv) > 1:
         name_args.append(sys.argv[1])

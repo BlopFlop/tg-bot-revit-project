@@ -146,13 +146,10 @@ dmypy.json
 .mypy_cache
 
 # json files
-*.json
+creds.json
 
 # arch files 
 *.bak
 
 # logging
 *.log
-
-
-

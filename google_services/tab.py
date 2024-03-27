@@ -5,7 +5,7 @@ from oauth2client.service_account import ServiceAccountCredentials
 import httplib2
 import apiclient
 
-from constants import (
+from settings.constants import (
     NAME_SHEET_ARCHIVE, NAME_SHEET_BACKUP, NAME_SHEET_DIR_PATH,
     NAME_SHEET_NWC, NAME_SHEET_FTP, NAME_FIELD_NWD, NAME_FIELD_PATH_NWF,
     NAME_FIELD_PUBLISH, CREDENTIALS_FILE_PATH, SPREADSHEET_ID,
