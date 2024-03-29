@@ -35,7 +35,7 @@ def get_info_file(path_dir: str) -> dict[str: int]:
 
 def get_chat_ids():
     '''Получение всех айди чатов'''
-    with open(PATH_CHATS_JSON, 'r') as json_file:
+    with open(PATH_CHATS_JSON, 'r', encoding='utf-8') as json_file:
         chat = json.load(json_file)
     return chat.keys()
 

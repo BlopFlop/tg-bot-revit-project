@@ -36,20 +36,20 @@ https://www.youtube.com/watch?v=caiR7WAGMVM&ab_channel=TheLookin
 В папке settings cоздать файл .env заполнить его следующим образом:
 
 ```
-NAME_PROJECT=MJVAL
-NAWIS_OR_REVIT_VERSION=2021
-TG_TOKEN=6533579547:AAH-OXNvJHMJs2Amz3Fmc2dYA5xNaDUh13c
-SPREADSHEET_ID=1NcpCgzaH-NO4iZ5zUaUvK_FxMrDO7W5fCpHHSb6v2SM
-EMAIL_HOST=smtp.mail.ru
-EMAIL_PORT=587
-EMAIL_HOST_PASSWORD=WDUts1f2UQ5NVt9BrpVP
-EMAIL_USE_TLS=False
-EMAIL_USE_SSL=True
-EMAIL_HOST_USER=a.yungblyud@upgroup.ru
-TO_EMAIL_USER=k.melnik@upgroup.ru,yu.gordienko@upgroup.ru,arturungb@gmail.com
-GOOGLE_DISK_FOLDER_ID=1oqZjIz_H2m-CsaBtbcJUgDDFFQT8lu60
-FAMILY_NAME_BIM_SPECIALIST=Юнгблюд,Артур,Владимирович
-PHONE_NUMBER_BIM_SPECIALIST=+7(912)318-59-32
+FAMILY_NAME_BIM_SPECIALIST={ФИО BIM специалиста}
+PHONE_NUMBER_BIM_SPECIALIST={Номер BIM специалиста}
+NAME_PROJECT={Имя проекта}
+NAWIS_OR_REVIT_VERSION={Версия Revit в формате 2021}
+EMAIL_HOST_USER={Почта исходная, с нее будут отправлятся сообщения в telegram боте}
+TO_EMAIL_USER={Почта конечная(Можно записать через запятую несколько почт), на нее будут отправлятся сообщения о выгруженных моделей}
+TG_TOKEN={Токен телеграм бота}
+SPREADSHEET_ID={Id Google таблицы}
+GOOGLE_DISK_FOLDER_ID={Id Google диска}
+EMAIL_HOST={smtp.mail.ru}
+EMAIL_PORT={587}
+EMAIL_HOST_PASSWORD={WDUts1f2UQ5NVt9BrpVP}
+EMAIL_USE_TLS={По умолчанию False}
+EMAIL_USE_SSL={По умолчанию True}
 ```
 
 Клонировать репозиторий и перейти в него в командной строке:

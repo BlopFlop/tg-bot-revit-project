@@ -53,6 +53,7 @@ def add_in_project(update, context):
     '''Добавление человека в проект.'''
     with open(PATH_CHATS_JSON, 'r') as json_file:
         data = json.load(json_file)
+
     chat = update.effective_chat
     message = 'Вы были добавлены в рассылку по проекту.'
 

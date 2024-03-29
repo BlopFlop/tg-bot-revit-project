@@ -14,6 +14,17 @@ def check_file(file_path, except_message) -> None | Exception:
         raise FileNotFoundError(except_message)
 
 
+def create_json(file_path):
+    if os.path.isfile(file_path):
+        with open(file_path, 'r', encoding='utf-8') as json_file:
+            data = json_file.read()
+        if data:
+            return True
+
+    with open(file_path, 'w', encoding='utf-8') as json_file:
+        json_file.write('{}')
+
+
 DATE_MASK = '%Y-%m-%d'
 DATE_NOW = dt.now().strftime(DATE_MASK)
 
@@ -55,10 +66,7 @@ FILE_LOAD_NAWIS = os.path.join(BASE_DIR, 'model_nawisworks.py')
 FILE_DEPLOY_ALBUM = os.path.join(BASE_DIR, 'model_arch.py')
 
 sys.path.append(BASE_DIR)
-check_file(
-    PATH_CHATS_JSON,
-    f'Файла {NAME_CHATS_JSON} нет в папке settings.'
-)
+create_json(PATH_CHATS_JSON)
 
 # google const
 NAME_SHEET_DIR_PATH = '00_Dir_paths'

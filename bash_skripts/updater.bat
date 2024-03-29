@@ -1,1 +1,2 @@
-py -3.11 tg_updater.py
+cd %~dp0
+py -3.11 ../tg_updater.py
