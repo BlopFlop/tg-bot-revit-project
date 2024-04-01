@@ -3,7 +3,7 @@ import logging
 
 from subprocess import run
 
-from settings.constants import PATH_REVTI_RST, START_LOAD_MODEL, END_LOAD_MODEL
+from settings import PATH_REVTI_RST, START_LOAD_MODEL, END_LOAD_MODEL
 
 
 logging.basicConfig(

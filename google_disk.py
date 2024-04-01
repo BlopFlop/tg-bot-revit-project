@@ -5,7 +5,7 @@ from googleapiclient.http import MediaFileUpload
 import httplib2
 import apiclient
 
-from settings.constants import CREDENTIALS_FILE_PATH
+from settings import CREDENTIALS_FILE_PATH
 
 
 def check_cred() -> None | Exception:

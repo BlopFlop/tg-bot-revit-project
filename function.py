@@ -9,8 +9,8 @@ from email.mime.image import MIMEImage
 from email.mime.audio import MIMEAudio
 from email.mime.multipart import MIMEMultipart
 
-from settings.constants import (
-    EMAIL_HOST, EMAIL_PORT, EMAIL_HOST_USER, EMAIL_HOST_PASSWORD,
+from settings import (
+    EMAIL_HOST, EMAIL_PORT, EMAIL_HOST_USER, EMAIL_HOST_PASSWORD
 )
 
 

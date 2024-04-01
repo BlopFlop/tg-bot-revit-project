@@ -4,8 +4,8 @@ import time
 import json
 import logging
 
-from google_services.tab import get_dir_paths
-from settings.constants import (
+from google_tab import get_dir_paths
+from settings import (
     BOT, PATH_CHATS_JSON, FILE_NAME_LOG, RVT_EXTENTION, NAME_SHEET_FTP
 )
 
@@ -45,7 +45,10 @@ def send_message(text) -> None:
     data_id = get_chat_ids()
 
     for chat_id in data_id:
-        BOT.send_message(int(chat_id), text)
+        try:
+            BOT.send_message(int(chat_id), text)
+        except Exception:
+            logging.warning(f'Чат Id {chat_id} заблокировал тг бота.')
 
 
 def check_file(path_dir: str) -> None:

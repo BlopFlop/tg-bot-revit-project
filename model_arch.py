@@ -2,13 +2,15 @@ from datetime import datetime as dt
 import os
 import logging
 import sys
+import time
 
 import shutil
 
-from google_services.tab import get_archive_paths
+from google_tab import get_archive_paths
 from tg_bot import send_message
+from env_file import flush_print
 
-from settings.constants import (
+from settings import (
     ARCH_START_MESSAGE, ARCH_END_MESSAGE, EXTENSION_FILE,
     DEPLOY_ALBUM_START_MESSAGE, DEPLOY_ALBUM_END_MESSAGE,
     DATE_MASK
@@ -60,11 +62,11 @@ def copy_files_in_dir(first_path: str, path_dir: str) -> None:
         name_file = os.path.basename(first_path)
         path_return = shutil.copy2(first_path, path_dir)
         if path_return:
-            print('Файл скопирован ', f"<<< {name_file} >>>")
+            flush_print('Файл скопирован ' + f"<<< {name_file} >>>")
             print('_' * 100)
 
 
-def main():
+def create_arch():
     db_data = get_archive_paths()
     for first_path_dir, second_path_dir, name_dir in db_data:
         files = get_path_for_extension(first_path_dir)
@@ -83,12 +85,18 @@ def main():
 
 
 if __name__ == '__main__':
-    if len(sys.argv) > 1:
-        send_message(DEPLOY_ALBUM_START_MESSAGE + f' Альбом {sys.argv[1]}')
-        main()
-        send_message(DEPLOY_ALBUM_END_MESSAGE)
-    else:
-        send_message(ARCH_START_MESSAGE)
-        main()
-        send_message(ARCH_END_MESSAGE)
+    try:
+        if len(sys.argv) > 1:
+            send_message(DEPLOY_ALBUM_START_MESSAGE + f' Альбом {sys.argv[1]}')
+            create_arch()
+            send_message(DEPLOY_ALBUM_END_MESSAGE)
+        else:
+            send_message(ARCH_START_MESSAGE)
+            create_arch()
+            send_message(ARCH_END_MESSAGE)
+    except Exception:
+        except_message = 'При архивации произошла ошибка.'
+        print(except_message)
+        logging.error(except_message)
+        time.sleep(5)
     sys.exit()

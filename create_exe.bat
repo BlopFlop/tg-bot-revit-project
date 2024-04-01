@@ -1,0 +1,8 @@
+pyinstaller --onefile "C:\PythonSkripts\tg-bot-revit-project\model_arch.py"
+pyinstaller --onefile "C:\PythonSkripts\tg-bot-revit-project\model_backup.py"
+pyinstaller --onefile "C:\PythonSkripts\tg-bot-revit-project\model_ftp.py"
+pyinstaller --onefile "C:\PythonSkripts\tg-bot-revit-project\model_nawisworks.py"
+pyinstaller --onefile "C:\PythonSkripts\tg-bot-revit-project\model_publish.py"
+pyinstaller --onefile "C:\PythonSkripts\tg-bot-revit-project\models_revit_server.py"
+pyinstaller --onefile "C:\PythonSkripts\tg-bot-revit-project\tg_bot.py"
+pyinstaller --onefile "C:\PythonSkripts\tg-bot-revit-project\tg_updater.py"

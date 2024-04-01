@@ -6,10 +6,10 @@ import subprocess
 import shutil
 import sys
 
-from google_services.tab import get_nwc_paths, get_nwd_paths
+from google_tab import get_nwc_paths, get_nwd_paths
 from tg_bot import send_message
 
-from settings.constants import (
+from settings import (
     NAWIS_OR_REVIT_VERSION, PATH_NAWIS_FTR, PATH_NAWIS_ROAMER, FIRST_FLAG,
     SECOND_FLAG, THIRD_FLAG, NWF_EXTENTION, NWC_EXTENTION,
     NWD_EXTENTION, FLAG_NWD, PATH_COPY_DIR, COUNT_RUN_MULTIPROSECCING,

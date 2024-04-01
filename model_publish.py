@@ -5,13 +5,13 @@ import sys
 
 from googleapiclient.errors import ResumableUploadError
 
-from google_services.tab import get_dir_paths, get_publish_paths
-from google_services.disk import load_file_in_google_disk
+from google_tab import get_dir_paths, get_publish_paths
+from google_disk import load_file_in_google_disk
 from model_nawisworks import search_file
 from tg_bot import send_message
-from mail.func import send_email
-
-from settings.constants import (
+from function import send_email
+from env_file import flush_print
+from settings import (
     NAME_PROJECT, TO_EMAIL_USER, NAME_FIELD_PUBLISH, GOOGLE_DISK_FOLDER_ID,
     FAMILY_NAME_BIM_SPECIALIST, PHONE_NUMBER_BIM_SPECIALIST, SECONDS_IN_MINUTE
 )
@@ -30,6 +30,7 @@ def create_dir(path):
 def main():
     '''Начало публикации моделей.'''
     time_name = str(dt.now().strftime("%y%m%d"))
+    flush_print('Начало публикации моделей.')
     end_path = os.path.join(
         get_dir_paths().get(NAME_FIELD_PUBLISH),
         '_'.join((time_name, NAME_PROJECT))

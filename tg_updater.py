@@ -6,8 +6,8 @@ import logging
 from telegram import ReplyKeyboardMarkup
 from telegram.ext import CommandHandler, PrefixHandler
 
-from google_services.tab import get_nwd_paths
-from settings.constants import (
+from google_tab import get_nwd_paths
+from settings import (
     FILE_LOAD_FTP, FILE_PUB_MODELS, FILE_LOAD_NAWIS, PATH_CHATS_JSON,
     NAME_PROJECT, UPDATER, BOT_INFO_MESSAGE, LOAD_FTP_START_MESSAGE,
     LOAD_NAWIS_START_MESSAGE, PUBLISH_MODELS_MESSAGE, FILE_NAME_LOG,
@@ -114,7 +114,7 @@ def load_model_in_ftp(update, context):
 
     if pull_process_load_ftp == 0:
         context.bot.send_message(chat_id=chat.id, text=LOAD_FTP_START_MESSAGE)
-        obj_process_load_ftp = subprocess.Popen(('py', '-3.11', FILE_LOAD_FTP))
+        obj_process_load_ftp = subprocess.Popen((FILE_LOAD_FTP))
     else:
         message = 'Выгрузка моделей на FTP, уже запущена.'
         context.bot.send_message(chat_id=chat.id, text=message)
@@ -141,7 +141,7 @@ def load_nawis_model(update, context):
         )
         context.bot.send_message(chat_id=chat.id, text=message)
         obj_process_load_navis = (
-            subprocess.Popen(('py', '-3.11', FILE_LOAD_NAWIS))
+            subprocess.Popen((FILE_LOAD_NAWIS))
         )
     else:
         message = (
@@ -163,7 +163,7 @@ def publish_models(update, context):
     if pull_process_pub_model == 0:
         context.bot.send_message(chat_id=chat.id, text=PUBLISH_MODELS_MESSAGE)
         obj_process_pub_model = (
-            subprocess.Popen(('py', '-3.11', FILE_PUB_MODELS))
+            subprocess.Popen((FILE_PUB_MODELS))
         )
     else:
         message = (
@@ -186,7 +186,7 @@ def arch_models_after_deploy_album(update, context):
 
     if pull_process_deploy_album == 0:
         obj_process_deploy_album = (
-            subprocess.Popen(('py', '-3.11', FILE_DEPLOY_ALBUM, arg_cmd))
+            subprocess.Popen((FILE_DEPLOY_ALBUM, arg_cmd))
         )
     else:
         message = (

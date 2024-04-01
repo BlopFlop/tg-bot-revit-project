@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 from telegram import Bot
 from telegram.ext import Updater
 
-load_dotenv()
+from env_file import get_env
 
 
 def check_file(file_path, except_message) -> None | Exception:
@@ -14,7 +14,7 @@ def check_file(file_path, except_message) -> None | Exception:
         raise FileNotFoundError(except_message)
 
 
-def create_json(file_path):
+def create_json(file_path: str) -> bool | None:
     if os.path.isfile(file_path):
         with open(file_path, 'r', encoding='utf-8') as json_file:
             data = json_file.read()
@@ -25,9 +25,57 @@ def create_json(file_path):
         json_file.write('{}')
 
 
+def get_file_run_load_models(file_name: str) -> str:
+    exe_ext = '.exe'
+    py_ext = '.py'
+
+    path_exe = os.path.join(BASE_DIR, (file_name + exe_ext))
+    path_py = os.path.join(BASE_DIR, (file_name + py_ext))
+
+    except_message = (
+        f'Файла {file_name}, c расширением exe или py нет в папке с проектом.'
+    )
+    path_run_load = (
+        path_exe if os.path.isfile(path_exe) else path_py
+    )
+    check_file(path_run_load, except_message)
+    return path_run_load
+
+
+load_dotenv()
+
+
 DATE_MASK = '%Y-%m-%d'
 DATE_NOW = dt.now().strftime(DATE_MASK)
 
+# paths const
+NAME_CREDS_JSON = 'creds.json'
+NAME_CHATS_JSON = 'chats.json'
+
+BASE_DIR = os.path.dirname(sys.argv[0])
+
+CREDENTIALS_FILE_PATH = os.path.join(BASE_DIR, NAME_CREDS_JSON)
+PATH_CHATS_JSON = os.path.join(BASE_DIR, NAME_CHATS_JSON)
+
+PATH_COPY_DIR = os.path.join(BASE_DIR, 'load_nawis')
+
+NAME_FTP_FILE = 'model_ftp'
+NAME_PUB_FILE = 'model_publish'
+NAME_NAWIS_FILE = 'model_nawisworks'
+NAME_DEPLOY_ALBUM_FILE = 'model_arch'
+
+FILE_LOAD_FTP = get_file_run_load_models(NAME_FTP_FILE)
+FILE_PUB_MODELS = get_file_run_load_models(NAME_PUB_FILE)
+FILE_LOAD_NAWIS = get_file_run_load_models(NAME_NAWIS_FILE)
+FILE_DEPLOY_ALBUM = get_file_run_load_models(NAME_DEPLOY_ALBUM_FILE)
+
+sys.path.append(BASE_DIR)
+create_json(PATH_CHATS_JSON)
+check_file(
+    CREDENTIALS_FILE_PATH,
+    f'Файла {NAME_CREDS_JSON} в папке со скриптом не существует'
+)
+get_env(BASE_DIR)
 
 # env const
 NAME_PROJECT = os.getenv('NAME_PROJECT')
@@ -44,29 +92,8 @@ EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
 TO_EMAIL_USER = os.getenv('TO_EMAIL_USER')
 
-FAMILY_NAME_BIM_SPECIALIST = (
-    ' '.join(os.getenv('FAMILY_NAME_BIM_SPECIALIST').split('.'))
-)
+FAMILY_NAME_BIM_SPECIALIST = os.getenv('FAMILY_NAME_BIM_SPECIALIST')
 PHONE_NUMBER_BIM_SPECIALIST = os.getenv('PHONE_NUMBER_BIM_SPECIALIST')
-
-# paths const
-NAME_CREDS_JSON = 'creds.json'
-NAME_CHATS_JSON = 'chats.json'
-
-PATH_FOLDER = os.path.dirname(__file__)
-BASE_DIR = os.path.dirname(PATH_FOLDER)
-
-CREDENTIALS_FILE_PATH = os.path.join(PATH_FOLDER, NAME_CREDS_JSON)
-PATH_CHATS_JSON = os.path.join(os.path.dirname(__file__), NAME_CHATS_JSON)
-
-PATH_COPY_DIR = os.path.join(BASE_DIR, 'load_nawis')
-FILE_LOAD_FTP = os.path.join(BASE_DIR, 'model_ftp.py')
-FILE_PUB_MODELS = os.path.join(BASE_DIR, 'model_publish.py')
-FILE_LOAD_NAWIS = os.path.join(BASE_DIR, 'model_nawisworks.py')
-FILE_DEPLOY_ALBUM = os.path.join(BASE_DIR, 'model_arch.py')
-
-sys.path.append(BASE_DIR)
-create_json(PATH_CHATS_JSON)
 
 # google const
 NAME_SHEET_DIR_PATH = '00_Dir_paths'
@@ -85,6 +112,7 @@ END_LOAD_MODEL = '<< Конец выгрузки моделей из Ревит 
 # tg bot const
 BOT = Bot(token=TG_TOKEN)
 UPDATER = Updater(token=TG_TOKEN)
+
 
 BOT_INFO_MESSAGE = (
     'Доступные команды:\n'

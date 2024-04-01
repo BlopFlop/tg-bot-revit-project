@@ -5,7 +5,7 @@ from oauth2client.service_account import ServiceAccountCredentials
 import httplib2
 import apiclient
 
-from settings.constants import (
+from settings import (
     NAME_SHEET_ARCHIVE, NAME_SHEET_BACKUP, NAME_SHEET_DIR_PATH,
     NAME_SHEET_NWC, NAME_SHEET_FTP, NAME_FIELD_NWD, NAME_FIELD_PATH_NWF,
     NAME_FIELD_PUBLISH, CREDENTIALS_FILE_PATH, SPREADSHEET_ID,
@@ -63,6 +63,7 @@ def get_dir_paths() -> dict[str]:
     return {
         path[0]: path[1]
         for path in data_in_google_tab.get(NAME_SHEET_DIR_PATH)[1:]
+        if path[0] and path[1]
     }
 
 
@@ -73,6 +74,7 @@ def get_backup_paths() -> list[tuple[str, str]]:
     return [
         (path[0], path[1], dir_paths.get(NAME_SHEET_BACKUP))
         for path in data_in_google_tab.get(NAME_SHEET_BACKUP)[1:]
+        if path[0] and path[1]
     ]
 
 
@@ -83,6 +85,7 @@ def get_archive_paths() -> list[tuple[str, str]]:
     return [
         (path[0], dir_paths.get(NAME_SHEET_ARCHIVE), path[1])
         for path in data_in_google_tab.get(NAME_SHEET_ARCHIVE)[1:]
+        if path[0] and path[1]
     ]
 
 
@@ -93,6 +96,7 @@ def get_ftp_paths() -> list[tuple[str, str]]:
     return [
         (path[0], path[1], dir_paths.get(NAME_SHEET_FTP))
         for path in data_in_google_tab.get(NAME_SHEET_FTP)[1:]
+        if path[0] and path[1]
     ]
 
 
@@ -103,6 +107,7 @@ def get_nwc_paths() -> list[tuple[str, str]]:
     return [
         (path[0], dir_paths.get(NAME_SHEET_NWC), path[1])
         for path in data_in_google_tab.get(NAME_SHEET_NWC)[1:]
+        if path[0] and path[1]
     ]
 
 
@@ -122,4 +127,5 @@ def get_publish_paths() -> list[tuple[str, str, str]]:
     return [
         (path[0], path[1], path[2])
         for path in data_in_google_tab.get(NAME_FIELD_PUBLISH)[1:]
+        if path[0] and path[1] and path[2]
     ]
