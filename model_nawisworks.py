@@ -1,20 +1,24 @@
+# -*- coding: utf-8 -*-
+
 from datetime import datetime as dt
-from multiprocessing import Pool
+from multiprocessing import Pool, freeze_support
 import os
 import re
 import subprocess
 import shutil
 import sys
 
-from google_tab import get_nwc_paths, get_nwd_paths
 from tg_bot import send_message
-
+from json_data import JsonFile
 from settings import (
     NAWIS_OR_REVIT_VERSION, PATH_NAWIS_FTR, PATH_NAWIS_ROAMER, FIRST_FLAG,
     SECOND_FLAG, THIRD_FLAG, NWF_EXTENTION, NWC_EXTENTION,
     NWD_EXTENTION, FLAG_NWD, PATH_COPY_DIR, COUNT_RUN_MULTIPROSECCING,
-    SECONDS_IN_MINUTE, DATE_NOW
+    SECONDS_IN_MINUTE, DATE_NOW, KEY_JSON_NWC, KEY_JSON_NWD, PATH_DATA_JSON,
+    logging
 )
+
+JSON_OBJ = JsonFile(PATH_DATA_JSON)
 
 
 def get_path_work_dir(file_path: str = __file__) -> str:
@@ -37,7 +41,7 @@ def search_file(path_dir: str, file_extension: str) -> str:
 
 
 def get_path_extension_file(path_rvt_file: str, file_extension: str) -> str:
-    """Получение необходимого расширения файла."""
+    '''Получение необходимого расширения файла.'''
     name_nwf_file = (
         os.path.basename(path_rvt_file).split('.')[0] + file_extension
     )
@@ -45,16 +49,22 @@ def get_path_extension_file(path_rvt_file: str, file_extension: str) -> str:
 
 
 def create_and_get_path_txt_file(path_rvt_file: str) -> str:
-    """Создание, и получение пути необходимого текстового файла."""
+    '''Создание, и получение пути необходимого текстового файла.'''
     path_txt_file = path_rvt_file.replace('.rvt', '.txt')
     txt_file = open(path_txt_file, 'w+', encoding='utf-8')
     txt_file.write(path_rvt_file)
     txt_file.close()
+
+    logging.info(f'txt файл по пути: {path_txt_file} создан.')
     return path_txt_file
 
 
 def start_create_nawis_file(path_txt_file: str, path_nwf: str) -> str:
-    """Запуск утилиты для выгрузки файлов Navisworks."""
+    '''Запуск утилиты для выгрузки файлов Navisworks.'''
+
+    start_utilites_message = 'Запуск утилиты для выгрузки файлов Navisworks.'
+    logging.info(start_utilites_message)
+
     subprocess.run(
         (
             PATH_NAWIS_FTR, FIRST_FLAG, path_txt_file, SECOND_FLAG,
@@ -65,12 +75,19 @@ def start_create_nawis_file(path_txt_file: str, path_nwf: str) -> str:
 
 
 def rename_file(path_file: str, rename_name: str) -> str:
-    """Переименование файлов"""
+    '''Переименование файлов'''
     extention_file = '.' + os.path.basename(path_file).split('.')[-1]
     rename_path = (
         os.path.join(os.path.dirname(path_file), rename_name + extention_file)
     )
     os.rename(path_file, rename_path)
+
+    rename_file_info = (
+        f'Файл {os.path.basename(path_file)} был переименован '
+        f'на {os.path.basename(rename_path)}'
+    )
+    logging.info(rename_file_info)
+
     return rename_path
 
 
@@ -102,14 +119,23 @@ def start_create_file_nwc(path_files: list[str]) -> None | FileExistsError:
     try:
         os.mkdir(path_work_dir)
     except FileExistsError:
+        warning_message = (
+            'При создании директории возникла ошибка, происходит попытка '
+            'пересоздания директории.'
+        )
+        logging.warning(warning_message)
         shutil.rmtree(path_work_dir)
         os.mkdir(path_work_dir)
-    p = Pool(processes=COUNT_RUN_MULTIPROSECCING)
-    p.map(main, path_files)
+    with Pool(processes=COUNT_RUN_MULTIPROSECCING) as p:
+        p.map(main, path_files)
 
 
 def create_nwd_file(end_path_nwd: str, source_path_nwf: str) -> str:
     '''Создание nwd файла'''
+    name_nwd = os.path.basename(end_path_nwd)
+    debug_message = f'Формирование nwd файла {name_nwd}'
+    logging.debug(debug_message)
+
     subprocess.run((
         PATH_NAWIS_ROAMER, FLAG_NWD, end_path_nwd, source_path_nwf
     ))
@@ -128,27 +154,31 @@ def start_create_file_nwd(source_path_nwf: str, load_dir: str) -> str:
 
 
 if __name__ == '__main__':
+    freeze_support()
     time_work = dt.now()
+    nwc_paths = JSON_OBJ.get(KEY_JSON_NWC)
     try:
-        start_create_file_nwc(get_nwc_paths())
+        start_create_file_nwc(nwc_paths)
     except PermissionError:
         except_message = (
             'При выгрузке Navisworks, произошла ошибка '
-            'пожалуйста попросите специалиста перезагрузить бота. \n'
+            'пожалуйста попросите специалиста перезагрузить бота. '
             'Причина: При прошлой выгрузке в Navisworks, процесс завершился '
             'раньше выгрузки, тем самым заняв все побочные файлы. Программа '
             'не может создать побочные файлы для создания файлов Navisworks.'
         )
+        logging.error(except_message)
         print(except_message)
         send_message(except_message)
         sys.exit()
-    source_path_nwf, load_dir = get_nwd_paths()
+    source_path_nwf, load_dir = JSON_OBJ.get(KEY_JSON_NWD)
     path_file_nwd = start_create_file_nwd(source_path_nwf, load_dir)
     print(path_file_nwd)
     time_work = (dt.now() - time_work).seconds // SECONDS_IN_MINUTE
-    message = (
+    end_message = (
         'Файлы Nawisworks выгружены.\n'
         f'Время выгрузки составило: {time_work} минут(ы|у).'
     )
-    send_message(message)
+    send_message(end_message)
+    logging.debug(end_message)
     sys.exit()

@@ -1,5 +1,4 @@
 import os
-import time
 
 
 CREATE_ENV_DATA = {
@@ -7,12 +6,12 @@ CREATE_ENV_DATA = {
     'PHONE_NUMBER_BIM_SPECIALIST': '',
     'NAME_PROJECT': '',
     'NAWIS_OR_REVIT_VERSION': '',
-    'EMAIL_HOST_USER': '',
-    'TO_EMAIL_USER': '',
+    'EMAIL_HOST_USER': 'None',
+    'TO_EMAIL_USER': 'None',
     'TG_TOKEN': '',
     'SPREADSHEET_ID': '',
     'GOOGLE_DISK_FOLDER_ID': '',
-    'EMAIL_HOST_PASSWORD': '',
+    'EMAIL_HOST_PASSWORD': 'None',
     'EMAIL_HOST': 'smtp.mail.ru',
     'EMAIL_PORT': '587',
     'EMAIL_USE_TLS': 'False',
@@ -20,28 +19,21 @@ CREATE_ENV_DATA = {
 }
 REQUIRED_FIELD = {
     'FAMILY_NAME_BIM_SPECIALIST': 'Фамилия, имя. BIM Специалиста.',
-    'EMAIL_HOST_USER': 'Емейл|почта.',
+    # 'EMAIL_HOST_USER': 'Емейл|почта.',
     'PHONE_NUMBER_BIM_SPECIALIST': 'Номер телефона.',
-    'TO_EMAIL_USER': (
-        'Почты получателей (записть через пробел'
-        ' или запятую если почт несколько)'),
+    # 'TO_EMAIL_USER': (
+    #     'Почты получателей (записть через пробел'
+    #     ' или запятую если почт несколько)'),
     'NAME_PROJECT': 'Имя проекта.',
     'NAWIS_OR_REVIT_VERSION': 'Версия Revit|Navis (Пример 2021)',
-    'EMAIL_HOST_PASSWORD': (
-        'Пароль от вашей почты (сгенерированный '
-        'для сторонних приложений.)'
-    ),
+    # 'EMAIL_HOST_PASSWORD': (
+    #     'Пароль от вашей почты (сгенерированный '
+    #     'для сторонних приложений.)'
+    # ),
     'TG_TOKEN': 'Токен телеграм бота.',
     'SPREADSHEET_ID': 'Айди гугл таблицы.',
-    'GOOGLE_DISK_FOLDER_ID': 'Айди папки на гугл диске.',
+    # 'GOOGLE_DISK_FOLDER_ID': 'Айди папки на гугл диске.',
 }
-
-
-def flush_print(text: str):
-    for symb in text:
-        time.sleep(0.005)
-        print(symb, end='', flush=True)
-    print()
 
 
 def get_data_env(path: str) -> dict[str: str]:
@@ -81,13 +73,13 @@ def fill_env(env_data: dict[str: str]) -> None:
     if '' not in env_data.values():
         return None
 
-    flush_print(
+    print(
         'В файле .env где находятся секретные данные, есть '
         'незаполненнеые поля, сейчас вам предложат их заполнить.'
     )
     for key, item in env_data.items():
         if not item:
-            flush_print(('Поле: ' + REQUIRED_FIELD.get(key)))
+            print(('Поле: ' + REQUIRED_FIELD.get(key)))
             input_message = 'Введите данные поля >>> '
             value = input(input_message)
             if ',' in value:
@@ -99,9 +91,6 @@ def fill_env(env_data: dict[str: str]) -> None:
 
 
 def get_env(base_dir) -> str:
-    flush_print('Получение данных из .env')
     path_env = os.path.join(base_dir, '.env')
-    flush_print('Проверка на заполенность полей.')
     check_env(path=path_env)
-    flush_print('Все ок все данные из файла .env подгружены.')
     return path_env

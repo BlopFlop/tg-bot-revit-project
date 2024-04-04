@@ -1,20 +1,14 @@
 from os import path
 import os
 import time
-import json
-import logging
 
-from google_tab import get_dir_paths
 from settings import (
-    BOT, PATH_CHATS_JSON, FILE_NAME_LOG, RVT_EXTENTION, NAME_SHEET_FTP
+    BOT, PATH_DATA_JSON, RVT_EXTENTION, NAME_SHEET_FTP,
+    KEY_JSON_CHAT_ID, KEY_JSON_DIR_PATHS, logging
 )
+from json_data import JsonFile
 
-
-logging.basicConfig(
-    handlers=[logging.FileHandler(FILE_NAME_LOG, 'a', 'utf-8')],
-    level=logging.DEBUG,
-    format='%(asctime)s, [%(levelname)s] %(message)s',
-)
+JSON_OBJ = JsonFile(PATH_DATA_JSON)
 
 
 def get_info_file(path_dir: str) -> dict[str: int]:
@@ -33,18 +27,11 @@ def get_info_file(path_dir: str) -> dict[str: int]:
     return files
 
 
-def get_chat_ids():
-    '''Получение всех айди чатов'''
-    with open(PATH_CHATS_JSON, 'r', encoding='utf-8') as json_file:
-        chat = json.load(json_file)
-    return chat.keys()
-
-
 def send_message(text) -> None:
     '''Отправка сообщения ботом в чатик'''
-    data_id = get_chat_ids()
+    chats_id = JSON_OBJ.get(KEY_JSON_CHAT_ID)
 
-    for chat_id in data_id:
+    for chat_id in chats_id:
         try:
             BOT.send_message(int(chat_id), text)
         except Exception:
@@ -53,7 +40,7 @@ def send_message(text) -> None:
 
 def check_file(path_dir: str) -> None:
     '''Функция наблоюдает за действиями над
-    Revit файлами необходимой в директории'''
+    Revit файлами в необходимой директории'''
     file_info = {}
     while True:
         file_info_now = get_info_file(path_dir)
@@ -87,6 +74,7 @@ def check_file(path_dir: str) -> None:
                     name for name in name_file if '_UNI_' not in name
                 ]
                 if name_file:
+                    logging.debug(text)
                     send_message(text)
 
         else:
@@ -98,8 +86,11 @@ def check_file(path_dir: str) -> None:
 
 if __name__ == '__main__':
     print('Ты в программе бота, для Revit проекта.')
+
+    debug_message = 'tg_bot запущен.'
+    logging.debug(debug_message)
     send_message(
         'Привет, меня запустили, нажми кнопку /start, для обновления кнопок.'
     )
-    path_dir = get_dir_paths().get(NAME_SHEET_FTP)
+    path_dir = JSON_OBJ.get(KEY_JSON_DIR_PATHS).get(NAME_SHEET_FTP)
     check_file(path_dir)

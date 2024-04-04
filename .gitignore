@@ -153,3 +153,6 @@ dmypy.json
 
 # logging
 *.log
+
+# temp
+load_nawis

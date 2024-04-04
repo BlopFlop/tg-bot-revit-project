@@ -1,18 +1,18 @@
 import os
-import json
 import subprocess
-import logging
 
 from telegram import ReplyKeyboardMarkup
 from telegram.ext import CommandHandler, PrefixHandler
 
-from google_tab import get_nwd_paths
 from settings import (
-    FILE_LOAD_FTP, FILE_PUB_MODELS, FILE_LOAD_NAWIS, PATH_CHATS_JSON,
+    FILE_LOAD_FTP, FILE_PUB_MODELS, FILE_LOAD_NAWIS, PATH_DATA_JSON,
     NAME_PROJECT, UPDATER, BOT_INFO_MESSAGE, LOAD_FTP_START_MESSAGE,
-    LOAD_NAWIS_START_MESSAGE, PUBLISH_MODELS_MESSAGE, FILE_NAME_LOG,
-    FILE_DEPLOY_ALBUM
+    LOAD_NAWIS_START_MESSAGE, PUBLISH_MODELS_MESSAGE, FILE_DEPLOY_ALBUM,
+    KEY_JSON_CHAT_ID, KEY_JSON_NWD, logging
 )
+from json_data import JsonFile, update_json
+
+JSON_OBJ = JsonFile(PATH_DATA_JSON)
 
 
 obj_process_load_navis = None
@@ -24,45 +24,40 @@ pull_process_pub_model = 0
 obj_process_deploy_album = None
 pull_process_deploy_album = 0
 
-logging.basicConfig(
-    handlers=[logging.FileHandler(FILE_NAME_LOG, 'a', 'utf-8')],
-    level=logging.DEBUG,
-    format='%(asctime)s, [%(levelname)s] %(message)s',
-)
-
 
 def remove_in_project(update, context):
     '''Удаление человека из проекта.'''
-    with open(PATH_CHATS_JSON, 'r') as json_file:
-        data = json.load(json_file)
+    chats_id = JSON_OBJ.get(KEY_JSON_CHAT_ID)
     chat = update.effective_chat
-    message = 'Вы были удалены из рассылки по проекту.'
 
-    if str(chat.id) in data.keys():
-        data.pop(str(chat.id))
+    if str(chat.id) in chats_id:
+        JSON_OBJ.delete({KEY_JSON_CHAT_ID: str(chat.id)})
+        message = 'Вы были удалены из рассылки по проекту.'
+        info_message = (
+            f'Пользователь с id {str(chat.id)} удалил себя из рассылки.'
+        )
+        logging.info(info_message)
     else:
         message = 'Вас нет в рассылке'
-
-    with open(PATH_CHATS_JSON, 'w') as json_file:
-        json.dump(data, json_file)
 
     context.bot.send_message(chat_id=chat.id, text=message)
 
 
 def add_in_project(update, context):
     '''Добавление человека в проект.'''
-    with open(PATH_CHATS_JSON, 'r') as json_file:
-        data = json.load(json_file)
+    chats_id = JSON_OBJ.get(KEY_JSON_CHAT_ID)
 
     chat = update.effective_chat
     message = 'Вы были добавлены в рассылку по проекту.'
 
-    if str(chat.id) in data.keys():
+    if str(chat.id) in chats_id:
         message = 'Вы уже рассылке'
     else:
-        data[chat.id] = update.message.chat.first_name
-        with open(PATH_CHATS_JSON, 'w') as json_file:
-            json.dump(data, json_file)
+        JSON_OBJ.patch({KEY_JSON_CHAT_ID: [str(chat.id)]})
+        info_message = (
+            f'Пользователь с id {str(chat.id)} был добавлен в рассылку.'
+        )
+        logging.info(info_message)
 
     context.bot.send_message(chat_id=chat.id, text=message)
 
@@ -79,27 +74,25 @@ def wake_up(update, context):
         ], resize_keyboard=True
     )
     message = (
-        f'Привет {name}, ты в ТГ боте проекта {NAME_PROJECT}, и ты был '
-        'подписан на рассылку о состоянии проекта.'
+        f'Привет {name}, ты в ТГ боте проекта {NAME_PROJECT}.'
     )
     context.bot.send_message(
         chat_id=chat.id, text=message, reply_markup=button
     )
 
-    with open(PATH_CHATS_JSON, 'r') as json_file:
-        data = json.load(json_file)
-
-    if str(chat.id) not in data.keys():
-        data[chat.id] = name
-
-        with open(PATH_CHATS_JSON, 'w') as file:
-            json.dump(data, file)
+    logging.debug('Вызов команды пробуждения бота.')
 
 
 def get_info(update, context):
     '''Команда для получения информации о функционале бота.'''
     chat = update.effective_chat
     context.bot.send_message(chat_id=chat.id, text=BOT_INFO_MESSAGE)
+
+    info_message = (
+        'BotCommand: Вызов команды для получения информации о '
+        'функционале чат бота'
+    )
+    logging.info(info_message)
 
 
 def load_model_in_ftp(update, context):
@@ -113,8 +106,14 @@ def load_model_in_ftp(update, context):
         pull_process_load_ftp = obj_process_load_ftp.poll()
 
     if pull_process_load_ftp == 0:
+        update_json()
         context.bot.send_message(chat_id=chat.id, text=LOAD_FTP_START_MESSAGE)
         obj_process_load_ftp = subprocess.Popen((FILE_LOAD_FTP))
+
+        debug_message = (
+            'BotCommand: Запуск скрипта выгрузки моделей на сервер FTP'
+        )
+        logging.debug(debug_message)
     else:
         message = 'Выгрузка моделей на FTP, уже запущена.'
         context.bot.send_message(chat_id=chat.id, text=message)
@@ -131,7 +130,8 @@ def load_nawis_model(update, context):
         pull_process_load_navis = obj_process_load_navis.poll()
 
     if pull_process_load_navis == 0:
-        source_path_nwf, load_dir = get_nwd_paths()
+        update_json()
+        source_path_nwf, load_dir = JSON_OBJ.get(KEY_JSON_NWD)
         message = ' '.join(
             (
                 LOAD_NAWIS_START_MESSAGE,
@@ -140,9 +140,12 @@ def load_nawis_model(update, context):
             )
         )
         context.bot.send_message(chat_id=chat.id, text=message)
-        obj_process_load_navis = (
-            subprocess.Popen((FILE_LOAD_NAWIS))
+        obj_process_load_navis = subprocess.Popen((FILE_LOAD_NAWIS))
+
+        debug_message = (
+            'BotCommand: Запуск скрипта выгрузки моделей в Navisworks.'
         )
+        logging.debug(debug_message)
     else:
         message = (
             'Выгрузка моделей в Navisworks уже запущена, дождитесь выгрузки.'
@@ -161,14 +164,20 @@ def publish_models(update, context):
         pull_process_pub_model = obj_process_pub_model.poll()
 
     if pull_process_pub_model == 0:
+        update_json()
         context.bot.send_message(chat_id=chat.id, text=PUBLISH_MODELS_MESSAGE)
         obj_process_pub_model = (
             subprocess.Popen((FILE_PUB_MODELS))
         )
+
+        debug_message = (
+            'BotCommand: Запуск скрипта публикации моделей заказчику.'
+        )
+        logging.debug(debug_message)
     else:
         message = (
-            'Выгрузка моделей для выгрузки заказчику уже запущена, дождитесь'
-            ' выгрузки.'
+            'Выгрузка моделей для выгрузки заказчику уже '
+            'запущена, дождитесь выгрузки.'
         )
         context.bot.send_message(chat_id=chat.id, text=message)
 
@@ -185,9 +194,12 @@ def arch_models_after_deploy_album(update, context):
         pull_process_deploy_album = obj_process_deploy_album.poll()
 
     if pull_process_deploy_album == 0:
+        update_json()
         obj_process_deploy_album = (
             subprocess.Popen((FILE_DEPLOY_ALBUM, arg_cmd))
         )
+        debug_message = 'BotCommand: Запуск скрипта архиващии моделей.'
+        logging.debug(debug_message)
     else:
         message = (
             'Архивация моделей после выдачи альбомов уже запущена. Подождите.'
@@ -198,7 +210,7 @@ def arch_models_after_deploy_album(update, context):
 def check_bot(update, context):
     '''Проверка работы бота'''
     chat = update.effective_chat
-    context.bot.send_message(chat_id=chat.id, text='OK')
+    context.bot.send_message(chat_id=chat.id, text='status_bot: working')
 
 
 def main():
