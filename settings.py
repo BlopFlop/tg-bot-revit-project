@@ -7,6 +7,7 @@ import logging
 from dotenv import load_dotenv
 from telegram import Bot
 from telegram.ext import Updater
+import telegram
 
 from env_file import get_env
 
@@ -82,9 +83,11 @@ get_env(BASE_DIR)
 NAME_PROJECT = os.getenv('NAME_PROJECT')
 NAWIS_OR_REVIT_VERSION = os.getenv('NAWIS_OR_REVIT_VERSION')
 
-FAMILY_NAME_BIM_SPECIALIST = (
-    os.getenv('FAMILY_NAME_BIM_SPECIALIST').replace('$', ' ')
-)
+FAMILY_NAME_BIM_SPECIALIST = os.getenv('FAMILY_NAME_BIM_SPECIALIST')
+
+if '$' in FAMILY_NAME_BIM_SPECIALIST:
+    FAMILY_NAME_BIM_SPECIALIST = FAMILY_NAME_BIM_SPECIALIST.replace('$', ' ')
+
 PHONE_NUMBER_BIM_SPECIALIST = os.getenv('PHONE_NUMBER_BIM_SPECIALIST')
 
 TG_TOKEN = os.getenv('TG_TOKEN')
@@ -113,8 +116,19 @@ START_LOAD_MODEL = '<< Начало выгрузки моделей из Рев�
 END_LOAD_MODEL = '<< Конец выгрузки моделей из Ревит сервера >>'
 
 # tg bot const
-BOT = Bot(token=TG_TOKEN)
-UPDATER = Updater(token=TG_TOKEN)
+try:
+    BOT = Bot(token=TG_TOKEN)
+    UPDATER = Updater(token=TG_TOKEN)
+except telegram.error.InvalidToken:
+    error_message = (
+        'Токен переданный в .env неправильный, пожалуйста пересоздайте '
+        'файл .env.'
+    )
+    logging.error(error_message)
+    print(error_message)
+    time.sleep(5)
+    sys.exit()
+
 
 BOT_INFO_MESSAGE = (
     'Доступные команды:\n'

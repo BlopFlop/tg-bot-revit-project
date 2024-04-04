@@ -10,7 +10,7 @@ CREATE_ENV_DATA = {
     'TO_EMAIL_USER': 'None',
     'TG_TOKEN': '',
     'SPREADSHEET_ID': '',
-    'GOOGLE_DISK_FOLDER_ID': '',
+    'GOOGLE_DISK_FOLDER_ID': '...',
     'EMAIL_HOST_PASSWORD': 'None',
     'EMAIL_HOST': 'smtp.mail.ru',
     'EMAIL_PORT': '587',
