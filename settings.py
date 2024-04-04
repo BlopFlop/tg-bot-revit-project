@@ -44,8 +44,6 @@ def get_file_run_load_models(file_name: str) -> str:
     return path_run_load
 
 
-load_dotenv()
-
 DATE_MASK = '%Y-%m-%d'
 DATE_NOW = dt.now().strftime(DATE_MASK)
 
@@ -77,7 +75,9 @@ check_file(
     'его можно получить создав в google console, инструкция > '
     'https://qna.habr.com/q/560988'
 )
+
 get_env(BASE_DIR)
+load_dotenv()
 
 # env const
 NAME_PROJECT = os.getenv('NAME_PROJECT')
