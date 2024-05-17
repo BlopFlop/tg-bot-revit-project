@@ -1,9 +1,8 @@
 from datetime import datetime as dt
 from pathlib import Path
+from dotenv import load_dotenv
 import os
 import sys
-
-from dotenv import load_dotenv
 
 from env_file import EnvFile
 
@@ -14,23 +13,23 @@ DATE_NOW: str = dt.now().strftime(DATE_FORMAT)
 # paths
 NAME_CREDS_JSON: str = 'creds.json'
 NAME_DATA_JSON: str = 'data.json'
-
 BASE_DIR: Path = Path(sys.argv[0]).parent
-sys.path.append(BASE_DIR)
-
 CREDENTIALS_FILE_PATH: Path = BASE_DIR / NAME_CREDS_JSON
 
-PATH_MAIN_EXE: Path = BASE_DIR / 'main.exe'
+PATH_TG_BOT_EXE: Path = BASE_DIR / 'tg_bot.exe'
+PATH_CMD_PROGRAM_EXE: Path = BASE_DIR / 'cmd_program.exe'
+PATH_DIR_CHECKS_EXE: Path = BASE_DIR / 'dir_checks.exe'
 PATH_DATA_JSON: Path = BASE_DIR / NAME_DATA_JSON
 PATH_COPY_DIR: Path = BASE_DIR / 'load_nawis'
 
 # env
 ENV_: EnvFile = EnvFile(BASE_DIR)
+sys.path.append((str(BASE_DIR)))
+os.chdir(str(BASE_DIR))
 load_dotenv()
 
 NAME_PROJECT: str = os.getenv('NAME_PROJECT')
 NAWIS_OR_REVIT_VERSION: str = os.getenv('NAWIS_OR_REVIT_VERSION')
-
 FAMILY_NAME_BIM_SPECIALIST: str = (
     os.getenv('FAMILY_NAME_BIM_SPECIALIST').replace('$', ' ')
 )
@@ -125,10 +124,10 @@ END_LOAD_MESSAGE_ARCH: str = 'Архивация, закончена, '
 END_LOAD_MESSAGE_ARCH_ALBUM: str = (
     'Архивация после выдачи альбомов, закончена, '
 )
-END_LOAD_MESSAGE_BACKUP: str = 'Бэкап моделей, завершен, '
-END_LOAD_MESSAGE_FTP: str = 'Выгрузка моделей на FTP, завершена, '
+END_LOAD_MESSAGE_BACKUP: str = 'Бэкап моделей, завершен,'
+END_LOAD_MESSAGE_FTP: str = 'Выгрузка моделей на FTP, завершена,'
 END_LOAD_MESSAGE_NAWISWORKS: str = 'Выгрузка моделей Navisworks, завершена,'
-END_LOAD_MESSAGE_PUBLISH: str = 'Публикация моделей, завершена, '
+END_LOAD_MESSAGE_PUBLISH: str = 'Публикация моделей, завершена,'
 
 # load file const
 NAME_PROGRAM_REVIT: str = (

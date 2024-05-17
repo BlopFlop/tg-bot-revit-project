@@ -1,15 +1,18 @@
 from subprocess import Popen
 from pathlib import Path
 import logging
+import time
+import sys
 
 from telegram import ReplyKeyboardMarkup, Bot
 from telegram.ext import Updater, CommandHandler, PrefixHandler
 
 from constants import (
-    NAME_PROJECT, KEY_JSON_CHAT_ID, TG_TOKEN,
-    PATH_MAIN_EXE, ARG_RUN_NAWIS, ARG_RUN_FTP,
-    ARG_RUN_PUBLISH, ARG_UPDATE_JSON_SHORT, ARG_NAME_ALBUM_SHORT,
-    ARG_RUN_ALBUM, BOT_HELP_MESSAGE, BOT_START_MESSAGE,
+    NAME_PROJECT, PATH_DIR_CHECKS_EXE, KEY_JSON_CHAT_ID, TG_TOKEN,
+    PATH_CMD_PROGRAM_EXE, PATH_TG_BOT_EXE,
+
+    ARG_RUN_NAWIS, ARG_RUN_FTP, ARG_RUN_PUBLISH, ARG_UPDATE_JSON_SHORT,
+    ARG_NAME_ALBUM_SHORT, ARG_RUN_ALBUM, BOT_HELP_MESSAGE, BOT_START_MESSAGE,
 
     BUTTON_START, BUTTON_HELP, BUTTON_ADD_IN_PROJECT, BUTTON_REMOVE_IN_PROJECT,
     BUTTON_FTP, BUTTON_NAWIS, BUTTON_PUB
@@ -149,7 +152,7 @@ class TgBot:
             self, update, context, process: Popen, argument: str) -> None:
         '''Запуск процесса.'''
         popen_args: tuple[Path, str, str] = (
-            PATH_MAIN_EXE, argument, ARG_UPDATE_JSON_SHORT
+            PATH_CMD_PROGRAM_EXE, argument, ARG_UPDATE_JSON_SHORT
         )
         if self._track_process(update, context, process):
             self.process_ftp = Popen(popen_args)
@@ -176,7 +179,7 @@ class TgBot:
         '''Команда архивации моделей после выгрузки альбомов.'''
         name_album = '_'.join(context.args)
         popen_args: tuple[Path, str, str] = (
-            PATH_MAIN_EXE, ARG_RUN_ALBUM, ARG_UPDATE_JSON_SHORT,
+            PATH_CMD_PROGRAM_EXE, ARG_RUN_ALBUM, ARG_UPDATE_JSON_SHORT,
             ARG_NAME_ALBUM_SHORT, name_album
         )
         if self._track_process(update, context, self.process_arch):
@@ -184,8 +187,21 @@ class TgBot:
 
 
 if __name__ == '__main__':
-    except_message = f'Файла {PATH_MAIN_EXE.name} нет в директории с ботом.'
-    check_dir_or_file(PATH_MAIN_EXE, except_message=except_message)
+    except_message = (
+        f'Файла {PATH_DIR_CHECKS_EXE.name} нет в директории с ботом.'
+    )
+    check_dir_or_file(PATH_DIR_CHECKS_EXE, except_message)
+    dir_checker_process: Popen = Popen((PATH_DIR_CHECKS_EXE))
+    except_message: str = (
+        f'Файла {PATH_CMD_PROGRAM_EXE.name} нет в директории с ботом.'
+    )
+    check_dir_or_file(PATH_CMD_PROGRAM_EXE, except_message=except_message)
     telegram_bot: TgBot = TgBot(tg_token=TG_TOKEN)
     telegram_bot.send_message(BOT_START_MESSAGE)
-    telegram_bot.start_updater()
+    try:
+        telegram_bot.start_updater()
+    except Exception:
+        dir_checker_process.kill()
+        Popen((PATH_TG_BOT_EXE))
+        time.sleep(30)
+        sys.exit()

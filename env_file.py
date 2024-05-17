@@ -1,4 +1,5 @@
 import os
+import logging
 
 
 class EnvFile:
@@ -7,12 +8,8 @@ class EnvFile:
         'PHONE_NUMBER_BIM_SPECIALIST': '',
         'NAME_PROJECT': '',
         'NAWIS_OR_REVIT_VERSION': '',
-        'EMAIL_HOST_USER': 'None',
-        'TO_EMAIL_USER': 'None',
         'TG_TOKEN': '',
         'SPREADSHEET_ID': '',
-        'GOOGLE_DISK_FOLDER_ID': '...',
-        'EMAIL_HOST_PASSWORD': 'None',
         'EMAIL_HOST': 'smtp.mail.ru',
         'EMAIL_PORT': '587',
         'EMAIL_USE_TLS': 'False',
@@ -41,8 +38,18 @@ class EnvFile:
         env_data = {}
         with open(self.path, mode='r', encoding='utf-8') as env_file:
             for data in env_file.read().split('\n'):
-                key, value = data.split('=')
-                env_data[key] = value
+                if data:
+                    key, value = data.split('=')
+                    env_data[key] = value
+                else:
+                    error_message = (
+                        'Ошибка в файле .env, перезапустите программу.'
+                    )
+                    env_file.close()
+                    logging.warning('Файл .env, был удален.')
+                    os.remove(self.path)
+                    logging.error(error_message)
+                    raise ValueError(error_message)
         return env_data
 
     def _push(self, data_env):

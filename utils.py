@@ -2,7 +2,6 @@ from pathlib import Path
 import time
 # import winapps
 import shutil
-import os
 import logging
 
 from constants import (
@@ -10,9 +9,10 @@ from constants import (
 )
 
 
-def check_dir_or_file(file_path, except_message) -> None | Exception:
+def check_dir_or_file(
+        file_path: Path, except_message: str) -> None | Exception:
     '''Проверка существует ли директория ли файл'''
-    if not (os.path.isfile(file_path) or os.path.isdir(file_path)):
+    if not (file_path.is_file() or file_path.is_dir()):
         logging.error(except_message, exc_info=True, stack_info=True)
         raise FileNotFoundError(except_message)
 

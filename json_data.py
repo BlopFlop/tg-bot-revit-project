@@ -30,13 +30,13 @@ class JsonFile:
 
     def _read_file(self) -> str:
         path_file = self._check_or_create_file(self.path_file)
-        with open(path_file, mode='r', encoding='utf-8') as json_file:
+        with open(str(path_file), mode='r', encoding='utf-8') as json_file:
             data = json.load(json_file)
         return data
 
     def _change_file(self, new_data: dict[str]) -> str:
         path_file = self._check_or_create_file(self.path_file)
-        with open(path_file, mode='w', encoding='utf-8') as json_file:
+        with open(str(path_file), mode='w', encoding='utf-8') as json_file:
             json.dump(new_data, json_file)
         return new_data
 
@@ -100,7 +100,7 @@ class JsonFile:
         self.put(data)
 
 
-JSON_OBJ: JsonFile = JsonFile(PATH_DATA_JSON)
+JSON_OBJ: JsonFile = JsonFile(str(PATH_DATA_JSON))
 
 if __name__ == '__main__':
     JSON_OBJ.update_json_from_google_tab()

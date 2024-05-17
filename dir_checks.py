@@ -1,15 +1,17 @@
 from os import path
+from subprocess import Popen
 import os
+import sys
 import time
 import logging
 
 from telegram import Bot
 
 from constants import (
-    RVT_EXTENTION, NAME_SHEET_FTP, TG_TOKEN,
+    PATH_DIR_CHECKS_EXE, RVT_EXTENTION, NAME_SHEET_FTP, TG_TOKEN,
     KEY_JSON_CHAT_ID, KEY_JSON_DIR_PATHS
 )
-from configs import configure_logging
+# from configs import configure_logging
 from tg_tools import send_message, init_tg_bot
 from json_data import JSON_OBJ
 
@@ -68,7 +70,6 @@ def check_file(bot_: Bot, path_dir: str) -> None:
                     ]
                     if name_file:
                         logging.debug(text)
-                        bot_: Bot = init_tg_bot(tg_token=TG_TOKEN)[0]
                         chats_id = JSON_OBJ.get(KEY_JSON_CHAT_ID)
                         send_message(bot_, text, chats_id)
 
@@ -83,9 +84,20 @@ def check_file(bot_: Bot, path_dir: str) -> None:
 
 
 if __name__ == '__main__':
-    configure_logging()
-    debug_message = 'dir_checker запущен.'
-    logging.debug(debug_message)
-    JSON_OBJ.update_json_from_google_tab()
-    path_dir = JSON_OBJ.get(KEY_JSON_DIR_PATHS).get(NAME_SHEET_FTP)
-    check_file(path_dir)
+    # configure_logging()
+    try:
+        debug_message = 'dir_checker запущен.'
+        logging.debug(debug_message)
+        JSON_OBJ.update_json_from_google_tab()
+        bot_: Bot = init_tg_bot(tg_token=TG_TOKEN)[0]
+        path_dir = JSON_OBJ.get(KEY_JSON_DIR_PATHS).get(NAME_SHEET_FTP)
+        check_file(bot_, path_dir)
+    except Exception:
+        time.sleep(30)
+        except_message = (
+            f'В программе {PATH_DIR_CHECKS_EXE.name} возникла ошибка, '
+            'происходит процесс ее перезапуска.'
+        )
+        logging.error(except_message)
+        Popen((PATH_DIR_CHECKS_EXE))
+        sys.exit()

@@ -1,4 +1,4 @@
-import os
+import logging
 import sys
 import time
 
@@ -13,15 +13,20 @@ from constants import (
     KEY_JSON_ARCH, KEY_JSON_BACKUP, KEY_JSON_FTP, KEY_JSON_NWC,
     KEY_JSON_NWD, KEY_JSON_PUB, KEY_JSON_DIR_PATHS
 )
-import logging
+from utils import check_dir_or_file
 
 
 def get_data_in_google_tab() -> list[tuple[str, str]]:
     '''Получение данных из гугл таблицы.'''
     logging.debug('Происходит получение данных из гугл таблицы.')
+    except_message = (
+        'Файла creeds.json нет в папке с проектом, '
+        'пожалуйста создайте его с помощью гугл сервисов.'
+    )
+    check_dir_or_file(CREDENTIALS_FILE_PATH, except_message)
 
     credentials = ServiceAccountCredentials.from_json_keyfile_name(
-        CREDENTIALS_FILE_PATH,
+        str(CREDENTIALS_FILE_PATH),
         [
             'https://www.googleapis.com/auth/spreadsheets',
             'https://www.googleapis.com/auth/drive'
