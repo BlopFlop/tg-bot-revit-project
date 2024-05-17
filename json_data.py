@@ -1,12 +1,19 @@
 import os
 import json
 
+<<<<<<< HEAD
 from constants import (
     PATH_DATA_JSON, KEY_JSON_ARCH, KEY_JSON_BACKUP, KEY_JSON_CHAT_ID,
     KEY_JSON_FTP, KEY_JSON_NWC, KEY_JSON_NWD, KEY_JSON_PUB, KEY_JSON_DIR_PATHS,
     CREDENTIALS_FILE_PATH, NAME_CREDS_JSON
 )
 from utils import check_dir_or_file
+=======
+from settings import (
+    PATH_DATA_JSON, KEY_JSON_ARCH, KEY_JSON_BACKUP, KEY_JSON_CHAT_ID,
+    KEY_JSON_FTP, KEY_JSON_NWC, KEY_JSON_NWD, KEY_JSON_PUB, KEY_JSON_DIR_PATHS
+)
+>>>>>>> 6985548735c0bde6118e09c3f523d759e5d80bb9
 from google_tab import get_json_data
 
 
@@ -22,7 +29,11 @@ class JsonFile:
     def _check_or_create_file(self, path_json: str) -> str:
         if not os.path.isfile(path_json):
             with open(path_json, mode='w', encoding='utf-8') as json_file:
+<<<<<<< HEAD
                 write_data: str = '{' + ', '.join(
+=======
+                write_data = '{' + ', '.join(
+>>>>>>> 6985548735c0bde6118e09c3f523d759e5d80bb9
                     f'"{field}": ""' for field in self.CONST_FIELDS
                 ) + '}'
                 json_file.write(write_data)
@@ -30,17 +41,29 @@ class JsonFile:
 
     def _read_file(self) -> str:
         path_file = self._check_or_create_file(self.path_file)
+<<<<<<< HEAD
         with open(str(path_file), mode='r', encoding='utf-8') as json_file:
+=======
+        with open(path_file, mode='r', encoding='utf-8') as json_file:
+>>>>>>> 6985548735c0bde6118e09c3f523d759e5d80bb9
             data = json.load(json_file)
         return data
 
     def _change_file(self, new_data: dict[str]) -> str:
         path_file = self._check_or_create_file(self.path_file)
+<<<<<<< HEAD
         with open(str(path_file), mode='w', encoding='utf-8') as json_file:
             json.dump(new_data, json_file)
         return new_data
 
     def get(self, key_data: str = None) -> dict[str:list[str]] | list[str]:
+=======
+        with open(path_file, mode='w', encoding='utf-8') as json_file:
+            json.dump(new_data, json_file)
+        return new_data
+
+    def get(self, key_data: str = None) -> dict[str] | list[str]:
+>>>>>>> 6985548735c0bde6118e09c3f523d759e5d80bb9
         data: dict[str:list[str]] = self._read_file()
 
         if key_data:
@@ -90,6 +113,7 @@ class JsonFile:
         data: dict[str:list[str]] = self._change_file(data)
         return delete_data
 
+<<<<<<< HEAD
     def update_json_from_google_tab(self) -> None:
         except_message = (
             f'Файл {NAME_CREDS_JSON} не существует, создайте его в гугл '
@@ -104,3 +128,16 @@ JSON_OBJ: JsonFile = JsonFile(str(PATH_DATA_JSON))
 
 if __name__ == '__main__':
     JSON_OBJ.update_json_from_google_tab()
+=======
+
+def update_json() -> None:
+    json_obj: type[JsonFile] = JsonFile(PATH_DATA_JSON)
+    data = get_json_data()
+    json_obj.put(data)
+
+
+if __name__ == '__main__':
+    json_obj: type[JsonFile] = JsonFile(PATH_DATA_JSON)
+    data = get_json_data()
+    json_obj.put(data)
+>>>>>>> 6985548735c0bde6118e09c3f523d759e5d80bb9

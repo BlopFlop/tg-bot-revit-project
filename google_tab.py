@@ -6,7 +6,7 @@ from oauth2client.service_account import ServiceAccountCredentials
 import httplib2
 import apiclient
 
-from constants import (
+from settings import (
     NAME_SHEET_ARCHIVE, NAME_SHEET_BACKUP, NAME_SHEET_DIR_PATH,
     NAME_SHEET_NWC, NAME_SHEET_FTP, NAME_FIELD_NWD, NAME_FIELD_PATH_NWF,
     NAME_FIELD_PUBLISH, CREDENTIALS_FILE_PATH, SPREADSHEET_ID,
@@ -35,6 +35,18 @@ def get_data_in_google_tab() -> list[tuple[str, str]]:
     http_auth = credentials.authorize(httplib2.Http())
     service = apiclient.discovery.build('sheets', 'v4', http=http_auth)
 
+    try:
+        sheets = (
+            service.spreadsheets().get(spreadsheetId=SPREADSHEET_ID).execute()
+        )
+    except apiclient.errors.HttpError:
+        error_message = (
+            'Вы передали неверный id гугл таблицы, исправте это в .env.'
+        )
+        print(error_message)
+        logging.error(error_message)
+        time.sleep(5)
+        sys.exit()
     try:
         sheets = (
             service.spreadsheets().get(spreadsheetId=SPREADSHEET_ID).execute()

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 from subprocess import Popen
 from pathlib import Path
 import logging
@@ -33,6 +34,19 @@ class TgBot:
 
         self._bot: Bot = _bot
         self._updater: Updater = _updater
+=======
+from os import path
+import os
+import time
+
+from settings import (
+    BOT, PATH_DATA_JSON, RVT_EXTENTION, NAME_SHEET_FTP,
+    KEY_JSON_CHAT_ID, KEY_JSON_DIR_PATHS, logging
+)
+from json_data import JsonFile
+
+JSON_OBJ = JsonFile(PATH_DATA_JSON)
+>>>>>>> 6985548735c0bde6118e09c3f523d759e5d80bb9
 
     def start_updater(self) -> None:
         '''Запуск апдейтера телеграм бота.'''
@@ -82,6 +96,7 @@ class TgBot:
                 return False
         return True
 
+<<<<<<< HEAD
     def _command_wake_up(self, update, context):
         '''Функция приветствие при запуске программы.'''
         chat = update.effective_chat
@@ -116,12 +131,65 @@ class TgBot:
     def _command_add_in_project(self, update, context):
         '''Добавление человека в проект.'''
         chats_id = JSON_OBJ.get(KEY_JSON_CHAT_ID)
+=======
+def send_message(text) -> None:
+    '''Отправка сообщения ботом в чатик'''
+    chats_id = JSON_OBJ.get(KEY_JSON_CHAT_ID)
+
+    for chat_id in chats_id:
+        try:
+            BOT.send_message(int(chat_id), text)
+        except Exception:
+            logging.warning(f'Чат Id {chat_id} заблокировал тг бота.')
+>>>>>>> 6985548735c0bde6118e09c3f523d759e5d80bb9
 
         chat = update.effective_chat
         message = 'Вы были добавлены в рассылку по проекту.'
 
+<<<<<<< HEAD
         if str(chat.id) in chats_id:
             message = 'Вы уже рассылке'
+=======
+def check_file(path_dir: str) -> None:
+    '''Функция наблоюдает за действиями над
+    Revit файлами в необходимой директории'''
+    file_info = {}
+    while True:
+        file_info_now = get_info_file(path_dir)
+        if file_info:
+            new_files = []
+            update_files = []
+            delete_files = []
+
+            for file_now_path, time_now_create in file_info_now.items():
+                file_name = path.basename(file_now_path)
+                if file_now_path not in file_info.keys():
+                    new_files.append(file_name)
+
+                elif time_now_create != file_info[file_now_path]:
+                    update_files.append(file_name)
+
+            for file_path in file_info.keys():
+                if file_path not in file_info_now.keys():
+                    file_name = path.basename(file_path)
+                    delete_files.append(file_name)
+
+            messages = [
+                (new_files, 'В папке проекта FTP появились новые модели: \n'),
+                (update_files, 'В папке проекта FTP обновились модели: \n'),
+                (delete_files, 'В папке проекта FTP удалили модели: \n'),
+            ]
+
+            for name_file, message in messages:
+                text = message + '\n'.join(name_file)
+                name_file = [
+                    name for name in name_file if '_UNI_' not in name
+                ]
+                if name_file:
+                    logging.debug(text)
+                    send_message(text)
+
+>>>>>>> 6985548735c0bde6118e09c3f523d759e5d80bb9
         else:
             JSON_OBJ.patch({KEY_JSON_CHAT_ID: [str(chat.id)]})
             info_message = (
@@ -187,6 +255,7 @@ class TgBot:
 
 
 if __name__ == '__main__':
+<<<<<<< HEAD
     except_message = (
         f'Файла {PATH_DIR_CHECKS_EXE.name} нет в директории с ботом.'
     )
@@ -205,3 +274,14 @@ if __name__ == '__main__':
         Popen((PATH_TG_BOT_EXE))
         time.sleep(30)
         sys.exit()
+=======
+    print('Ты в программе бота, для Revit проекта.')
+
+    debug_message = 'tg_bot запущен.'
+    logging.debug(debug_message)
+    send_message(
+        'Привет, меня запустили, нажми кнопку /start, для обновления кнопок.'
+    )
+    path_dir = JSON_OBJ.get(KEY_JSON_DIR_PATHS).get(NAME_SHEET_FTP)
+    check_file(path_dir)
+>>>>>>> 6985548735c0bde6118e09c3f523d759e5d80bb9
