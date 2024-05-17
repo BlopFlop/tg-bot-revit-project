@@ -3,7 +3,7 @@ from types import FunctionType
 import argparse
 import logging
 
-from constants import (
+from _constants import (
     ARGPARS_HELP_LOAD_MODEL, ARGPARS_HELP_SILENCE_MODE,
     ARGPARS_HELP_UPDATE_JSON,
 
@@ -12,7 +12,7 @@ from constants import (
     ARG_RUN_NAWIS, ARG_RUN_PUBLISH, ARG_RUN_ALBUM, ARG_NAME_ALBUM_LONG,
     ARG_NAME_ALBUM_SHORT, ARGPARS_HELP_NAME_ALBUM_MODEL
 )
-from load_models import LoadModel
+from _load_models import LoadModel
 
 
 def arch(load_obj: LoadModel) -> str:

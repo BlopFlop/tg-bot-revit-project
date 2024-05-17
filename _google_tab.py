@@ -1,4 +1,5 @@
 import logging
+import os
 import sys
 import time
 
@@ -6,14 +7,14 @@ from oauth2client.service_account import ServiceAccountCredentials
 import httplib2
 import apiclient
 
-from settings import (
+from _constants import (
     NAME_SHEET_ARCHIVE, NAME_SHEET_BACKUP, NAME_SHEET_DIR_PATH,
     NAME_SHEET_NWC, NAME_SHEET_FTP, NAME_FIELD_NWD, NAME_FIELD_PATH_NWF,
     NAME_FIELD_PUBLISH, CREDENTIALS_FILE_PATH, SPREADSHEET_ID,
     KEY_JSON_ARCH, KEY_JSON_BACKUP, KEY_JSON_FTP, KEY_JSON_NWC,
     KEY_JSON_NWD, KEY_JSON_PUB, KEY_JSON_DIR_PATHS
 )
-from utils import check_dir_or_file
+from _utils import check_dir_or_file
 
 
 def get_data_in_google_tab() -> list[tuple[str, str]]:
@@ -35,18 +36,6 @@ def get_data_in_google_tab() -> list[tuple[str, str]]:
     http_auth = credentials.authorize(httplib2.Http())
     service = apiclient.discovery.build('sheets', 'v4', http=http_auth)
 
-    try:
-        sheets = (
-            service.spreadsheets().get(spreadsheetId=SPREADSHEET_ID).execute()
-        )
-    except apiclient.errors.HttpError:
-        error_message = (
-            'Вы передали неверный id гугл таблицы, исправте это в .env.'
-        )
-        print(error_message)
-        logging.error(error_message)
-        time.sleep(5)
-        sys.exit()
     try:
         sheets = (
             service.spreadsheets().get(spreadsheetId=SPREADSHEET_ID).execute()

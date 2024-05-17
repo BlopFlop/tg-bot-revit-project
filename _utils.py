@@ -4,7 +4,7 @@ import time
 import shutil
 import logging
 
-from constants import (
+from _constants import (
     SECONDS_IN_HOUR, SECONDS_IN_DAY, SECONDS_IN_WEEK, SECONDS_IN_MONTH
 )
 

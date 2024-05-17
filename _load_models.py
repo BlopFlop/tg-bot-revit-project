@@ -6,7 +6,7 @@ import subprocess
 import shutil
 import logging
 
-from constants import (
+from _constants import (
     COUNT_PROCESSES, DATE_NOW, NAME_PROJECT, NAME_FIELD_PUBLISH,
     ROAMER_FLAG_NWD, SEC_IN_MIN,
 
@@ -33,8 +33,8 @@ from constants import (
 
     TG_TOKEN
 )
-from json_data import JSON_OBJ
-from utils import (
+from _json_data import JSON_OBJ
+from _utils import (
     make_achive, get_file_from_extention, check_file_creation_date
 )
 from tg_bot import TgBot

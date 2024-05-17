@@ -7,13 +7,12 @@ import logging
 
 from telegram import Bot
 
-from constants import (
+from _constants import (
     PATH_DIR_CHECKS_EXE, RVT_EXTENTION, NAME_SHEET_FTP, TG_TOKEN,
     KEY_JSON_CHAT_ID, KEY_JSON_DIR_PATHS
 )
-# from configs import configure_logging
-from tg_tools import send_message, init_tg_bot
-from json_data import JSON_OBJ
+from _tg_tools import send_message, init_tg_bot
+from _json_data import JSON_OBJ
 
 
 def get_info_file(path_dir: str) -> dict[str: int]:
@@ -84,7 +83,6 @@ def check_file(bot_: Bot, path_dir: str) -> None:
 
 
 if __name__ == '__main__':
-    # configure_logging()
     try:
         debug_message = 'dir_checker запущен.'
         logging.debug(debug_message)
