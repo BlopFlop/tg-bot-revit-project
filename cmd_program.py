@@ -5,7 +5,7 @@ from _constants import (
     PATH_REVIT_RST
 )
 from _configs import configure_logging
-from _cmd_parser import parser_
+from _arg_parser import parser_
 from _utils import check_dir_or_file
 
 

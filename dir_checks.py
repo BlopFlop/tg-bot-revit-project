@@ -1,14 +1,12 @@
 from os import path
-from subprocess import Popen
 import os
-import sys
 import time
 import logging
 
 from telegram import Bot
 
 from _constants import (
-    PATH_DIR_CHECKS_EXE, RVT_EXTENTION, NAME_SHEET_FTP, TG_TOKEN,
+    RVT_EXTENTION, NAME_SHEET_FTP, TG_TOKEN,
     KEY_JSON_CHAT_ID, KEY_JSON_DIR_PATHS
 )
 from _tg_tools import send_message, init_tg_bot
