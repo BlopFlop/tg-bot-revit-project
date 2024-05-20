@@ -73,29 +73,18 @@ def check_file(bot_: Bot, path_dir: str) -> None:
                         send_message(bot_, text, chats_id)
 
             else:
-                print('Папка пуста, либо это первый запуск программы.')
+                logging.info('Папка пуста, либо это первый запуск программы.')
             file_info = {key: item for key, item in file_info_now.items()}
         except Exception as ex:
             logging.error(ex('При осмотре директории произошла ошибка'))
-            print('Произошла ошибка...')
-
+            continue
         time.sleep(30)
 
 
 if __name__ == '__main__':
-    try:
-        debug_message = 'dir_checker запущен.'
-        logging.debug(debug_message)
-        JSON_OBJ.update_json_from_google_tab()
-        bot_: Bot = init_tg_bot(tg_token=TG_TOKEN)[0]
-        path_dir = JSON_OBJ.get(KEY_JSON_DIR_PATHS).get(NAME_SHEET_FTP)
-        check_file(bot_, path_dir)
-    except Exception:
-        time.sleep(30)
-        except_message = (
-            f'В программе {PATH_DIR_CHECKS_EXE.name} возникла ошибка, '
-            'происходит процесс ее перезапуска.'
-        )
-        logging.error(except_message)
-        Popen((PATH_DIR_CHECKS_EXE))
-        sys.exit()
+    debug_message = 'dir_checker запущен.'
+    logging.debug(debug_message)
+    JSON_OBJ.update_json_from_google_tab()
+    bot_: Bot = init_tg_bot(tg_token=TG_TOKEN)[0]
+    path_dir = JSON_OBJ.get(KEY_JSON_DIR_PATHS).get(NAME_SHEET_FTP)
+    check_file(bot_, path_dir)

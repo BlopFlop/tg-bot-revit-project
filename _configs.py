@@ -2,7 +2,7 @@ from logging.handlers import RotatingFileHandler
 
 import logging
 
-from _constants import BASE_DIR, DATE_FORMAT, LOG_FORMAT,
+from _constants import BASE_DIR, DATE_FORMAT, LOG_FORMAT
 
 
 def configure_logging() -> None:

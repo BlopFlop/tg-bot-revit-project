@@ -112,18 +112,26 @@ BOT_HELP_MESSAGE: str = (
     '* - По всем вопросам обращаться к вашему BIM специалисту: '
     f'{FAMILY_NAME_BIM_SPECIALIST}. Номер {PHONE_NUMBER_BIM_SPECIALIST}'
 )
-START_LOAD_MESSAGE_ARCH: str = 'Старт архивации моделей.'
+START_LOAD_MESSAGE_ARCH: str = (
+    'Старт архивации моделей (перед этим , будут выгружены модели'
+    ' на ftp и в nawisworks).'
+)
 START_LOAD_MESSAGE_ARCH_ALBUM: str = (
-    'Старт архивации моделей после выдачи альбомов.'
+    'Старт архивации моделей после выдачи альбомов. (перед этим ,'
+    'будут выгружены модели на ftp и в nawisworks).'
 )
 START_LOAD_MESSAGE_BACKUP: str = 'Старт бэкапа моделей.'
 START_LOAD_MESSAGE_FTP: str = 'Старт выгрузки моделей на сервер FTP.'
-START_LOAD_MESSAGE_NAWISWORKS: str = 'Старт выгрузки моделй Nawisworks.'
-START_LOAD_MESSAGE_PUBLISH: str = 'Старт публикации моделей заказчику.'
-END_LOAD_MESSAGE_ARCH: str = 'Архивация, закончена, '
-END_LOAD_MESSAGE_ARCH_ALBUM: str = (
-    'Архивация после выдачи альбомов, закончена, '
+START_LOAD_MESSAGE_NAWISWORKS: str = (
+    'Старт выгрузки моделй Nawisworks (перед этим Revit модели будут выгружены'
+    'на FTP).'
 )
+START_LOAD_MESSAGE_PUBLISH: str = (
+    'Старт публикации моделей заказчику. (перед этим, будут выгружены модели '
+    'на ftp и в nawisworks).'
+)
+END_LOAD_MESSAGE_ARCH: str = 'Архивация, закончена, '
+END_LOAD_MESSAGE_ARCH_ALBUM: str = 'Архивация после выдачи альбомов, закончена, '
 END_LOAD_MESSAGE_BACKUP: str = 'Бэкап моделей, завершен,'
 END_LOAD_MESSAGE_FTP: str = 'Выгрузка моделей на FTP, завершена,'
 END_LOAD_MESSAGE_NAWISWORKS: str = 'Выгрузка моделей Navisworks, завершена,'
@@ -194,6 +202,7 @@ SECONDS_PERIOD: dict[str: int] = {
     'month': SECONDS_IN_MONTH,
 }
 
+# json const
 KEY_JSON_DIR_PATHS: str = 'dir_paths'
 KEY_JSON_ARCH: str = 'archive'
 KEY_JSON_BACKUP: str = 'backup'

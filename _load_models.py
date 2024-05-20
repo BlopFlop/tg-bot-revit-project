@@ -28,6 +28,8 @@ from _constants import (
     RST_COMMAND_CREATE_LOCAL_MODEL, RST_FLAG_SERVER, RST_FLAG_DESTINATION,
     RST_FLAG_OVERWRITE,
 
+    NAME_SHEET_ARCHIVE, NAME_SHEET_FTP, NAME_SHEET_BACKUP,
+
     KEY_JSON_ARCH, KEY_JSON_DIR_PATHS,
     KEY_JSON_FTP, KEY_JSON_NWC, KEY_JSON_NWD, KEY_JSON_PUB,
 
@@ -144,10 +146,12 @@ class LoadModel:
     )
     def arch(self) -> str:
         '''Архивация моделей'''
-        path_items = JSON_OBJ.get(KEY_JSON_ARCH)
+        LoadModel(update_json_mode=False, silence_mode=True).ftp()
+        LoadModel(update_json_mode=False, silence_mode=True).nawisworks()
+        path_items: str = JSON_OBJ.get(KEY_JSON_ARCH)
         for path_item in path_items:
             self._arch_model(path_item)
-        return JSON_OBJ.get(KEY_JSON_DIR_PATHS).get(KEY_JSON_ARCH)
+        return JSON_OBJ.get(KEY_JSON_DIR_PATHS).get(NAME_SHEET_ARCHIVE)
 
     @_start_end_load(
         start_message=START_LOAD_MESSAGE_ARCH_ALBUM,
@@ -156,10 +160,11 @@ class LoadModel:
     def arch_album(self, append_name_arch: str) -> str:
         '''Архивация моделей после выдачи альбомов'''
         LoadModel(update_json_mode=False, silence_mode=True).ftp()
+        LoadModel(update_json_mode=False, silence_mode=True).nawisworks()
         path_items = JSON_OBJ.get(KEY_JSON_ARCH)
         for path_item in path_items:
             self._arch_model(path_item, append_name_arch)
-        return JSON_OBJ.get(KEY_JSON_DIR_PATHS).get(KEY_JSON_ARCH)
+        return JSON_OBJ.get(KEY_JSON_DIR_PATHS).get(NAME_SHEET_ARCHIVE)
 
     def _run_load_in_revit_server(
             self, path_files: list[str, str, str]) -> Path | None:
@@ -201,7 +206,6 @@ class LoadModel:
                 ' она не будет выгружена. >>>'
             )
             logging.error(error_message)
-            print(error_message)
 
     @_start_end_load(
         start_message=START_LOAD_MESSAGE_BACKUP,
@@ -220,6 +224,7 @@ class LoadModel:
 
         with Pool(COUNT_PROCESSES) as pool:
             pool.map(self._run_load_in_revit_server, json_data)
+        return JSON_OBJ.get(KEY_JSON_DIR_PATHS).get(NAME_SHEET_BACKUP)
 
     @_start_end_load(
         start_message=START_LOAD_MESSAGE_FTP,
@@ -238,7 +243,8 @@ class LoadModel:
 
         with Pool(COUNT_PROCESSES) as pool:
             pool.map(self._run_load_in_revit_server, json_data)
-        return JSON_OBJ.get(KEY_JSON_DIR_PATHS).get(KEY_JSON_FTP)
+
+        return JSON_OBJ.get(KEY_JSON_DIR_PATHS).get(NAME_SHEET_FTP)
 
     def _mk_txt_from_rvt(self, path_rvt_file: Path) -> Path:
         '''Формирование txt из rvt файла'''
@@ -291,10 +297,16 @@ class LoadModel:
             PATH_NAWIS_FTR, FTR_FIRST_FLAG, path_txt, FTR_SECOND_FLAG,
             path_nwf, FTR_THIRD_FLAG, '2019'
         ))
-        rename_nwc: Path = copy_dir / (rename_name + NWC_EXTENTION)
-        path_nwc: Path = path_nwc.rename(rename_nwc)
-
-        shutil.copy(rename_nwc, move_dir_path)
+        if path_nwc.is_file():
+            rename_nwc: Path = copy_dir / (rename_name + NWC_EXTENTION)
+            path_nwc: Path = path_nwc.rename(rename_nwc)
+            shutil.copy(rename_nwc, move_dir_path)
+        else:
+            warning_message = (
+                f'При выгрузке модели {path_rvt.name} в .nwc возникла ошибка'
+            )
+            logging.warning()
+        shutil.rmtree(copy_dir, ignore_errors=True)
         return path_nwc
 
     def _run_load_nwd(self, nwd_path: Path, nwf_path: Path) -> Path:
@@ -313,8 +325,8 @@ class LoadModel:
     )
     def nawisworks(self) -> str:
         '''Старт выгрузки моделей в Nawisworks'''
+        shutil.rmtree(PATH_WORKDIR_NAWIS, ignore_errors=True)
         PATH_WORKDIR_NAWIS.mkdir(exist_ok=True)
-
         LoadModel(update_json_mode=False, silence_mode=True).ftp()
 
         nwc_paths = JSON_OBJ.get(key_data=KEY_JSON_NWC)
@@ -339,6 +351,8 @@ class LoadModel:
     )
     def publish(self) -> str:
         '''Публикация моделей заказчику'''
+        LoadModel(update_json_mode=False, silence_mode=True).ftp()
+        LoadModel(update_json_mode=False, silence_mode=True).nawisworks()
         pub_dir_path = Path(
             JSON_OBJ.get(KEY_JSON_DIR_PATHS).get(NAME_FIELD_PUBLISH)
         )
