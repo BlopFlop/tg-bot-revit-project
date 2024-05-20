@@ -113,11 +113,11 @@ BOT_HELP_MESSAGE: str = (
     f'{FAMILY_NAME_BIM_SPECIALIST}. Номер {PHONE_NUMBER_BIM_SPECIALIST}'
 )
 START_LOAD_MESSAGE_ARCH: str = (
-    'Старт архивации моделей (перед этим , будут выгружены модели'
-    ' на ftp и в nawisworks).'
+    'Старт архивации моделей (перед этим , будут выгружены модели '
+    'на ftp и в nawisworks).'
 )
 START_LOAD_MESSAGE_ARCH_ALBUM: str = (
-    'Старт архивации моделей после выдачи альбомов. (перед этим ,'
+    'Старт архивации моделей после выдачи альбомов. (перед этим, '
     'будут выгружены модели на ftp и в nawisworks).'
 )
 START_LOAD_MESSAGE_BACKUP: str = 'Старт бэкапа моделей.'
