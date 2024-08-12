@@ -5,69 +5,25 @@ from subprocess import Popen
 
 from telegram import Bot, ReplyKeyboardMarkup, Update
 from telegram.error import InvalidToken
-from telegram.ext import (
-    CommandHandler,
-    ContextTypes,
-    PrefixHandler,
-    Updater,
-)
+from telegram.ext import CommandHandler, ContextTypes, PrefixHandler, Updater
 
 # from cmd_program import project
-from tg_bot.constants import BASE_DIR, DATE_NOW
-from tg_bot.functions import DataChat, send_message_all_chats
-
-NAME_PROJECT = "teST"
-
-BUTTON_HELP: str = "help"
-BUTTON_START: str = "start"
-BUTTON_ADD_IN_PROJECT: str = "add_in_project"
-BUTTON_REMOVE_IN_PROJECT: str = "remove_in_project"
-BUTTON_FTP: str = "ftp"
-BUTTON_NAWIS: str = "nawisworks"
-BUTTON_PUB: str = "publish"
-
-BOT_HELP_MESSAGE: str = (
-    "Доступные команды:\n"
-    f"• /{BUTTON_HELP} - Информация о функционале бота.\n"
-    f"• /{BUTTON_ADD_IN_PROJECT} - Добавление вас в рассылку уведомлений, "
-    "о статусе выгрузок.\n"
-    f"• /{BUTTON_REMOVE_IN_PROJECT} - Удаляет вас из рассылки уведомлений. \n"
-    f"• /{BUTTON_FTP} - Выгрузка моделей на FTP(публикация для подрядчика)\n"
-    f"• /{BUTTON_NAWIS} - Выгрузка Navisworks моделей"
-    '(В том числе консолидированная сборка модели "NWD")\n'
-    f"• /{BUTTON_PUB} - Публикация моделей заказчику.\n"
-    "• #d <Имя альбома> - Архивация моделей после выдачи альбомов "
-    "Пример: вписав команду << #d 01AR02AR >> вам создадут архив с именем"
-    f"<< {DATE_NOW}_RVT_01AR02AR >>\n\n"
-    # '* - По всем вопросам обращаться к вашему BIM специалисту: '
-    # f'{FAMILY_NAME_BIM_SPECIALIST}. Номер {PHONE_NUMBER_BIM_SPECIALIST}'
+from telegram_revit_project.constants import (
+    BASE_DIR,
+    BOT_HELP_MESSAGE,
+    BUTTON_ADD_IN_PROJECT,
+    BUTTON_FTP,
+    BUTTON_HELP,
+    BUTTON_NAWIS,
+    BUTTON_PUB,
+    BUTTON_REMOVE_IN_PROJECT,
+    BUTTON_START,
+    CMD_NAME_PROJECT,
+    START_LOAD_MESSAGE_ARCH_ALBUM,
+    START_LOAD_MESSAGE_FTP,
+    START_LOAD_MESSAGE_NAWISWORKS,
 )
-START_LOAD_MESSAGE_ARCH: str = (
-    "Старт архивации моделей (перед этим , будут выгружены модели "
-    "на ftp и в nawisworks)."
-)
-START_LOAD_MESSAGE_ARCH_ALBUM: str = (
-    "Старт архивации моделей после выдачи альбомов. (перед этим, "
-    "будут выгружены модели на ftp и в nawisworks)."
-)
-START_LOAD_MESSAGE_BACKUP: str = "Старт бэкапа моделей."
-START_LOAD_MESSAGE_FTP: str = "Старт выгрузки моделей на сервер FTP."
-START_LOAD_MESSAGE_NAWISWORKS: str = (
-    "Старт выгрузки моделй Nawisworks (перед этим Revit модели будут выгружены"
-    " на FTP)."
-)
-START_LOAD_MESSAGE_PUBLISH: str = (
-    "Старт публикации моделей заказчику. (перед этим, будут выгружены модели "
-    "на ftp и в nawisworks)."
-)
-END_LOAD_MESSAGE_ARCH: str = "Архивация, закончена, "
-END_LOAD_MESSAGE_ARCH_ALBUM: str = (
-    "Архивация после выдачи альбомов, закончена, "
-)
-END_LOAD_MESSAGE_BACKUP: str = "Бэкап моделей, завершен,"
-END_LOAD_MESSAGE_FTP: str = "Выгрузка моделей на FTP, завершена,"
-END_LOAD_MESSAGE_NAWISWORKS: str = "Выгрузка моделей Navisworks, завершена,"
-END_LOAD_MESSAGE_PUBLISH: str = "Публикация моделей, завершена,"
+from telegram_revit_project.functions import DataChat, send_message_all_chats
 
 
 class TgBot:
@@ -122,9 +78,7 @@ class TgBot:
                 return False
         return True
 
-    def wake_up(
-        self, update: Update, context: ContextTypes
-    ) -> None:
+    def wake_up(self, update: Update, context: ContextTypes) -> None:
         chat = update.effective_chat
         name = update.message.chat.first_name
         button = ReplyKeyboardMarkup(
@@ -136,16 +90,14 @@ class TgBot:
             resize_keyboard=True,
         )
 
-        message = f"Привет {name}, ты в ТГ боте проекта {NAME_PROJECT}."
+        message = f"Привет {name}, ты в ТГ боте проекта {CMD_NAME_PROJECT}."
         context.bot.send_message(
             chat_id=chat.id, text=message, reply_markup=button
         )
         logging.debug("BotCommand: Вызов команды пробуждения бота.")
         self.add_in_project(update, context)
 
-    def help(
-        self, update: Update, context: ContextTypes
-    ) -> None:
+    def help(self, update: Update, context: ContextTypes) -> None:
         chat = update.effective_chat
         context.bot.send_message(chat_id=chat.id, text=BOT_HELP_MESSAGE)
 
@@ -155,17 +107,13 @@ class TgBot:
         )
         logging.info(info_message)
 
-    def no_run(
-        self, update: Update, context: ContextTypes
-    ) -> None:
+    def no_run(self, update: Update, context: ContextTypes) -> None:
         context.bot.send_message(
             chat_id=update.effective_chat.id,
             text="Данная функция сейчас недоступна.",
         )
 
-    def add_in_project(
-        self, update: Update, context: ContextTypes
-    ) -> None:
+    def add_in_project(self, update: Update, context: ContextTypes) -> None:
         """Добавление человека в проект."""
         current_chat_id = update.effective_chat.id
 
@@ -200,9 +148,7 @@ class TgBot:
 
         context.bot.send_message(chat_id=current_chat_id, text=message)
 
-    def ftp(
-        self, update: Update, context: ContextTypes
-    ) -> None:
+    def ftp(self, update: Update, context: ContextTypes) -> None:
 
         cmd_arguments = (self.cmd_exe_program, "ftp", "--tg_mode")
 
@@ -213,9 +159,7 @@ class TgBot:
         if self._track_process(update, context):
             self.process_ = subprocess.Popen(args=cmd_arguments)
 
-    def nawisworks(
-        self, update: Update, context: ContextTypes
-    ) -> None:
+    def nawisworks(self, update: Update, context: ContextTypes) -> None:
 
         cmd_arguments = (self.cmd_exe_program, "nawisworks")
 
@@ -227,9 +171,7 @@ class TgBot:
             )
             self.process_ = subprocess.Popen(args=cmd_arguments)
 
-    def publish(
-        self, update: Update, context: ContextTypes
-    ) -> None:
+    def publish(self, update: Update, context: ContextTypes) -> None:
 
         cmd_arguments = (self.cmd_exe_program, "publish")
 
@@ -241,11 +183,14 @@ class TgBot:
             )
             self.process_ = subprocess.Popen(args=cmd_arguments)
 
-    def arch_album(
-        self, update: Update, context: ContextTypes
-    ) -> None:
-        name_album = '_'.join(context.args)
-        cmd_arguments = (self.cmd_exe_program, "arch", "--name_album", name_album)
+    def arch_album(self, update: Update, context: ContextTypes) -> None:
+        name_album = "_".join(context.args)
+        cmd_arguments = (
+            self.cmd_exe_program,
+            "arch",
+            "--name_album",
+            name_album,
+        )
 
         if self._track_process(update, context):
             chat_id = update.effective_chat.id
@@ -258,7 +203,7 @@ class TgBot:
     def message_start(self):
         send_message_all_chats(
             self.bot,
-            message="Телеграм бот запущен нажми /start, для обновления кнопок.",
+            message="Телеграм бот запущен нажми /start, для обновления кнопок."
         )
 
     def start_updater(self) -> Updater:

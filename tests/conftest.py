@@ -38,7 +38,9 @@ def arch_dir_obj(tmpdir) -> ArchDirThree:
     mkdir_arch = tmpdir.mkdir("Archive")
     mkdir_arch.mkdir(ArchDirThree._ARCH_DIR)
     mkdir_arch.mkdir(ArchDirThree._BACKUP_DIR)
-    arch_dir_three: ArchDirThree = ArchDirThree(Path(mkdir_arch), PROJECT_NAME)
+    arch_dir_three: ArchDirThree = ArchDirThree(
+        Path(mkdir_arch), PROJECT_NAME
+    )
     arch_dir_three.create_dirs()
     return arch_dir_three
 

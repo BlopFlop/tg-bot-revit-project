@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from tg_bot.functions import DataChat
+from telegram_revit_project.functions import DataChat
 
 FST_TEST_CHAT_ID = 132142
 SCD_TEST_CHAT_ID = 3259

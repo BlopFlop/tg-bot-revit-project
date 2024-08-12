@@ -16,7 +16,9 @@ from tests.functions import get_file_from_extention
 
 def test_get_models_in_project(project: Project):
     local_revit_model: list[RevitFileInLocal] = project.revit_files
-    revit_model_in_rs: list[RevitFileInRevitServer] = project.revit_files_in_rs
+    revit_model_in_rs: list[RevitFileInRevitServer] = (
+        project.revit_files_in_rs
+    )
     nwf_models: list[Path] = project.nwf_models
 
     count_items_in_rs: int = len(local_revit_model)

@@ -21,8 +21,6 @@ from cmd_revit_program.core.constants import (
     RVT_EXTENTION,
 )
 
-# from transliterate import translit
-
 
 class control_workdir:
     def __init__(self, path_dir: Path) -> None:

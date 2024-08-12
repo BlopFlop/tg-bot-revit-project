@@ -115,7 +115,9 @@ class Project:
         self.project_dir: ProjectDirThree = ProjectDirThree(
             project_dir_path, project_name
         )
-        self.arch_dir: ArchDirThree = ArchDirThree(arch_dir_path, project_name)
+        self.arch_dir: ArchDirThree = ArchDirThree(
+            arch_dir_path, project_name
+        )
         self.ftp_dir: FTPDirThree = FTPDirThree(ftp_dir_path, project_name)
 
         self.project_dir.create_dirs()

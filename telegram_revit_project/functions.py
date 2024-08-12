@@ -9,7 +9,7 @@ from telegram import Bot, Update
 from telegram.error import InvalidToken
 from telegram.ext import ContextTypes
 
-from tg_bot.constants import BASE_DIR, TG_TOKEN
+from telegram_revit_project.constants import BASE_DIR, TG_TOKEN
 
 
 def init_tg_bot(tg_token: str) -> Bot | None:

@@ -1,5 +1,3 @@
-import asyncio
-import csv
 import logging
 from datetime import datetime as dt
 from functools import wraps
@@ -8,7 +6,7 @@ from pathlib import Path
 from telegram import Bot
 from telegram.error import InvalidToken
 
-from tg_bot.functions import DataChat, send_message_all_chats
+from telegram_revit_project.functions import send_message_all_chats
 
 
 def init_tg_bot(tg_token: str) -> Bot | None:

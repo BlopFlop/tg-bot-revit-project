@@ -129,7 +129,9 @@ def parser(project: Project, tg_token: str = None) -> None:
     args: tuple = parser.parse_args()
     mode_load_model: Callable = choises.get(args.load_model)
 
-    info_message: str = f"Программа запущена режиме: {mode_load_model.__doc__}"
+    info_message: str = (
+        f"Программа запущена режиме: {mode_load_model.__doc__}"
+    )
     logging.info(info_message)
 
     if args.name_album:
