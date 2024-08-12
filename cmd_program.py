@@ -1,26 +1,25 @@
 from multiprocessing import freeze_support
 
-from _constants import (
-    PATH_NAWISWORKS, PATH_NAWIS_FTR, PATH_NAWIS_ROAMER, PATH_REVIT,
-    PATH_REVIT_RST
+from cmd_revit_program import (
+    CMD_ARCH_DIR,
+    CMD_FTP_DIR,
+    CMD_NAME_PROJECT,
+    CMD_PROJECT_DIR,
+    CMD_SEARCH_PATTERN,
+    CMD_SERVER_NAME,
+    Project,
+    parser,
 )
-from _configs import configure_logging
-from _arg_parser import parser_
-from _utils import check_dir_or_file
 
+project = Project(
+    server_name=CMD_SERVER_NAME,
+    project_name=CMD_NAME_PROJECT,
+    search_pattern=CMD_SEARCH_PATTERN,
+    project_dir_path=CMD_PROJECT_DIR,
+    arch_dir_path=CMD_ARCH_DIR,
+    ftp_dir_path=CMD_FTP_DIR,
+)
 
-if __name__ == '__main__':
-    configure_logging()
+if __name__ == "__main__":
     freeze_support()
-    except_message = (
-        'Программа Nawisworks не установленна или установленна неправильно.'
-    )
-    check_dir_or_file(PATH_NAWISWORKS, except_message)
-    check_dir_or_file(PATH_NAWIS_FTR, except_message)
-    check_dir_or_file(PATH_NAWIS_ROAMER, except_message)
-    except_message = (
-        'Программа Revit не установленна или установленна неправильно.'
-    )
-    check_dir_or_file(PATH_REVIT, except_message)
-    check_dir_or_file(PATH_REVIT_RST, except_message)
-    parser_()
+    parser(project)

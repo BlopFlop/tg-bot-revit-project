@@ -1,23 +1,11 @@
-from subprocess import Popen
+from telegram.error import InvalidToken
 
-from _constants import (
-    PATH_DIR_CHECKS_EXE, TG_TOKEN,
-    PATH_CMD_PROGRAM_EXE, BOT_START_MESSAGE,
-)
-from _tg_tools import TgBot
-from _utils import check_dir_or_file
+from tg_bot import TG_TOKEN, TgBot
 
-
-if __name__ == '__main__':
-    except_message = (
-        f'Файла {PATH_DIR_CHECKS_EXE.name} нет в директории с ботом.'
-    )
-    check_dir_or_file(PATH_DIR_CHECKS_EXE, except_message)
-    dir_checker_process: Popen = Popen((PATH_DIR_CHECKS_EXE))
-    except_message: str = (
-        f'Файла {PATH_CMD_PROGRAM_EXE.name} нет в директории с ботом.'
-    )
-    check_dir_or_file(PATH_CMD_PROGRAM_EXE, except_message=except_message)
-    telegram_bot: TgBot = TgBot(tg_token=TG_TOKEN)
-    telegram_bot.send_message(BOT_START_MESSAGE)
-    telegram_bot.start_updater()
+if __name__ == "__main__":
+    tg_bot = TgBot(TG_TOKEN)
+    try:
+        tg_bot.message_start()
+        updater = tg_bot.start_updater()
+    except InvalidToken as ex:
+        raise ex("Передайте корректный токен.")
