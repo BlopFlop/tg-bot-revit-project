@@ -22,6 +22,7 @@ from telegram_revit_project.constants import (
     START_LOAD_MESSAGE_ARCH_ALBUM,
     START_LOAD_MESSAGE_FTP,
     START_LOAD_MESSAGE_NAWISWORKS,
+    START_LOAD_MESSAGE_PUBLISH
 )
 from telegram_revit_project.functions import DataChat, send_message_all_chats
 
@@ -161,7 +162,7 @@ class TgBot:
 
     def nawisworks(self, update: Update, context: ContextTypes) -> None:
 
-        cmd_arguments = (self.cmd_exe_program, "nawisworks")
+        cmd_arguments = (self.cmd_exe_program, "nawisworks", "--tg_mode")
 
         if self._track_process(update, context):
             chat_id = update.effective_chat.id
@@ -173,13 +174,13 @@ class TgBot:
 
     def publish(self, update: Update, context: ContextTypes) -> None:
 
-        cmd_arguments = (self.cmd_exe_program, "publish")
+        cmd_arguments = (self.cmd_exe_program, "publish", "--tg_mode")
 
         if self._track_process(update, context):
             chat_id = update.effective_chat.id
             bot = context.bot
             bot.send_message(
-                chat_id=chat_id, text=START_LOAD_MESSAGE_NAWISWORKS
+                chat_id=chat_id, text=START_LOAD_MESSAGE_PUBLISH
             )
             self.process_ = subprocess.Popen(args=cmd_arguments)
 
@@ -190,6 +191,7 @@ class TgBot:
             "arch",
             "--name_album",
             name_album,
+            "--tg_mode"
         )
 
         if self._track_process(update, context):
