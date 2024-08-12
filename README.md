@@ -48,7 +48,6 @@ BlopFlop(ArturYoungBlood)
 
 # Инструкции
 [Создать телеграм бота](https://habr.com/ru/articles/442800/):
-```
 Файл env:
 
 ```
