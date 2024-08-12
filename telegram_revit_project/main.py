@@ -31,11 +31,12 @@ class TgBot:
     cmd_exe_program = "cmd_program.exe"
 
     def __init__(self, token: str) -> None:
-        self.bot: Bot
-        self.updater: Updater
+        init_componets = self._init_tg_bot(token)
+
+        self.bot: Bot = init_componets[0]
+        self.updater: Updater = init_componets[1]
 
         self.chats = DataChat(base_dir=BASE_DIR)
-        self._init_tg_bot(token=token)
 
     def _get_cmd_program(self) -> Path | None:
         exe_path = BASE_DIR / self.cmd_exe_program
@@ -47,11 +48,10 @@ class TgBot:
             " выгрузки не будут запущены."
         )
 
-    def _init_tg_bot(self, token: str) -> None:
+    def _init_tg_bot(self, token: str) -> tuple[Bot, Updater]:
         """Инициализация телеграм бота."""
         try:
-            self.bot = Bot(token=token)
-            self.updater = Updater(token=token)
+            return Bot(token=token), Updater(token=token)
 
         except InvalidToken:
             error_message = (

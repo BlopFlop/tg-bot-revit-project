@@ -8,7 +8,7 @@ from telegram_revit_project import TG_TOKEN, TgBot
 if __name__ == "__main__":
     dir_check: Path = Path('dir_check.exe')
     if dir_check.is_file():
-        subprocess.Popen('dir_check.py')
+        subprocess.Popen(args=(dir_check,))
     tg_bot = TgBot(TG_TOKEN)
     try:
         tg_bot.message_start()

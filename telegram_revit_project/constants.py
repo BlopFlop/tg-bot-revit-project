@@ -9,15 +9,13 @@ from dotenv import load_dotenv
 DATE_FORMAT: Final[str] = "%Y-%m-%d"
 DATE_NOW: Final[str] = dt.now().strftime(DATE_FORMAT)
 
+BASE_DIR: Final[Path] = Path(sys.argv[0]).parent
 
-if __name__ == "__main__":
-    BASE_DIR: Final[Path] = Path(sys.argv[0]).parent
-else:
-    BASE_DIR: Final[Path] = Path().parent
-
+sys.path.append((str(BASE_DIR)))
+os.chdir(str(BASE_DIR))
 load_dotenv()
 
-TG_TOKEN: Final[str] = os.getenv(key="TG_TOKEN", default="")
+TG_TOKEN: Final[str] = os.getenv(key="TG_TOKEN", default="notTelegramToken")
 CMD_NAME_PROJECT: Final[str] = os.getenv(
     key="CMD_NAME_PROJECT", default="999_TEST"
 )

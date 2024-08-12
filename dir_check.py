@@ -74,7 +74,7 @@ def check_file(bot_: Bot, path_dir: str) -> None:
         except Exception as ex:
             logging.error(ex('При осмотре директории произошла ошибка'))
             continue
-        time.sleep(30)
+        time.sleep(120)
 
 
 if __name__ == '__main__':
