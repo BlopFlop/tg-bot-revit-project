@@ -38,8 +38,8 @@ def start_arch(project: Project, name_album: str = None) -> Path:
     """Архивация проекта."""
     project.load_in_backup()
     project.load_in_ftp()
-    project.load_in_nwc()
-    project.load_in_nwd()
+    # project.load_in_nwc()
+    # project.load_in_nwd()
     project.load_in_arch(name_album)
     return project.arch_dir.arch
 

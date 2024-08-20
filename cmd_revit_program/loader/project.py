@@ -281,7 +281,7 @@ class Project:
         return self.arch_dir.arch
 
     def load_in_publish(self) -> Path:
-        items: dict[str : list[Path]] = self.arch_or_pub_items
+        items: dict[str: list[Path]] = self.arch_or_pub_items
 
         pub_dir: Path = self.ftp_dir.publish / (f"{self.name}_{DATE_NOW}")
         with control_workdir(pub_dir) as new_dir:
