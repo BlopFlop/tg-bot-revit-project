@@ -27,9 +27,15 @@ BASE_DIR: Final[Path] = Path(sys.argv[0]).parent
 sys.path.append((str(BASE_DIR)))
 os.chdir(str(BASE_DIR))
 
-CMD_SERVER_NAME: Final[str] = os.getenv("CMD_SERVER_NAME", default="10.10.1.30")
-CMD_NAME_PROJECT: Final[str] = os.getenv(key="CMD_NAME_PROJECT", default="999_TEST")
-CMD_SEARCH_PATTERN: Final[str] = os.getenv(key="CMD_SEARCH_PATTERN", default="TEST")
+CMD_SERVER_NAME: Final[str] = os.getenv(
+    "CMD_SERVER_NAME", default="10.10.1.30"
+)
+CMD_NAME_PROJECT: Final[str] = os.getenv(
+    key="CMD_NAME_PROJECT", default="999_TEST"
+)
+CMD_SEARCH_PATTERN: Final[str] = os.getenv(
+    key="CMD_SEARCH_PATTERN", default="TEST"
+)
 CMD_NAWIS_OR_REVIT_VERSION: Final[str] = os.getenv(
     key="CMD_NAWIS_OR_REVIT_VERSION", default="2021"
 )
@@ -58,7 +64,9 @@ PATH_NAWISWORKS: Final[Path] = Path(
     rf"C:\Program Files\Autodesk\Navisworks Manage {CMD_NAWIS_OR_REVIT_VERSION}"
 )
 
-PATH_REVIT_RST: Final[Path] = PATH_REVIT / r"RevitServerToolCommand\RevitServerTool.exe"
+PATH_REVIT_RST: Final[Path] = (
+    PATH_REVIT / r"RevitServerToolCommand\RevitServerTool.exe"
+)
 
 PATH_NAWIS_FTR: Final[Path] = PATH_NAWISWORKS / "FiletoolsTaskRunner.exe"
 PATH_NAWIS_ROAMER: Final[Path] = PATH_NAWISWORKS / "Roamer.exe"
@@ -95,7 +103,9 @@ ARGPARS_HELP_LOAD_MODEL: Final[str] = (
     f"{ARG_START_NAWIS} - выгрузка моделей в формат nawisworks;\n"
     f"{ARG_START_PUBLISH} - публикация моделей заказчику."
 )
-ARGPARS_HELP_NAME_ALBUM_MODEL: Final[str] = "* - Задает имя альбома при архивации."
+ARGPARS_HELP_NAME_ALBUM_MODEL: Final[str] = (
+    "* - Задает имя альбома при архивации."
+)
 ARGPARS_HELP_TG_MODE: Final[
     str
 ] = """\
@@ -107,7 +117,9 @@ ARGPARS_HELP_TG_MODE: Final[
 END_LOAD_MESSAGE_ARCH: Final[str] = "Архивация, закончена, "
 END_LOAD_MESSAGE_BACKUP: Final[str] = "Бэкап моделей, завершен,"
 END_LOAD_MESSAGE_FTP: Final[str] = "Выгрузка моделей на FTP, завершена,"
-END_LOAD_MESSAGE_NAWISWORKS: Final[str] = "Выгрузка моделей Navisworks, завершена,"
+END_LOAD_MESSAGE_NAWISWORKS: Final[str] = (
+    "Выгрузка моделей Navisworks, завершена,"
+)
 END_LOAD_MESSAGE_PUBLISH: Final[str] = "Публикация моделей, завершена,"
 
 
@@ -116,7 +128,9 @@ def configure_logging() -> None:
     log_dir = BASE_DIR / "logs"
     log_dir.mkdir(exist_ok=True)
     log_file = log_dir / "bim_web_app_logging.log"
-    rotating_handler = RotatingFileHandler(log_file, maxBytes=10**6, backupCount=5)
+    rotating_handler = RotatingFileHandler(
+        log_file, maxBytes=10**6, backupCount=5
+    )
     logging.basicConfig(
         datefmt=DATE_FORMAT,
         format=LOG_FORMAT,
@@ -126,4 +140,3 @@ def configure_logging() -> None:
 
 
 configure_logging()
-

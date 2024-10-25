@@ -64,7 +64,9 @@ def start_ftp_process_from_pool(file) -> None:
     file.copy_to_ftp()
 
 
-def get_file_from_extention(source_dir: Path, extention: str = None) -> list[Path]:
+def get_file_from_extention(
+    source_dir: Path, extention: str = None
+) -> list[Path]:
     """Рекурсивное получение путей до файлов в древе директориий."""
     DOT_SYMBOL: str = "."
 
@@ -79,7 +81,9 @@ def get_file_from_extention(source_dir: Path, extention: str = None) -> list[Pat
     return [Path(file) for file in source_dir.rglob(pattern)]
 
 
-def make_achive(root_dir: Path, arch_dir_path: Path, format_: str = "zip") -> Path:
+def make_achive(
+    root_dir: Path, arch_dir_path: Path, format_: str = "zip"
+) -> Path:
     """Формирование архива"""
 
     return Path(
@@ -303,9 +307,7 @@ def transliterate(name: str):
 
 def get_or_create_dir(path_dir: Path) -> Path:
     if path_dir.is_file():
-        except_message = (
-            "Произошла ошибка вы передали в функцию путь до файла, а не директории."
-        )
+        except_message = "Произошла ошибка вы передали в функцию путь до файла, а не директории."
         logging.error(except_message, stack_info=True)
         raise DirectoryNotFoundError(except_message)
 
@@ -381,7 +383,9 @@ def command_run_export_rvt_to_nwc(source_path: Path, end_dir_path: Path):
         )
         logging.warning(warning_message)
     else:
-        end_dir_path: Path = end_dir_path.parent / (end_dir_path.stem + path_nwc.suffix)
+        end_dir_path: Path = end_dir_path.parent / (
+            end_dir_path.stem + path_nwc.suffix
+        )
         shutil.copy(path_nwc, end_dir_path)
 
     shutil.rmtree(copy_dir, ignore_errors=True)
@@ -397,4 +401,3 @@ def run_load_nwd(nwd_path: Path, nwf_path: Path) -> Path:
     debug_message = f"Сформирован nwd файл {nwd_path.name}"
     logging.debug(debug_message)
     return nwd_path
-

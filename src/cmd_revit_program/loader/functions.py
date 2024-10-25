@@ -57,7 +57,9 @@ def start_ftp_process_from_pool(file) -> None:
     file.copy_to_ftp()
 
 
-def get_file_from_extention(source_dir: Path, extention: str = None) -> list[Path]:
+def get_file_from_extention(
+    source_dir: Path, extention: str = None
+) -> list[Path]:
     """Рекурсивное получение путей до файлов в древе директориий."""
     DOT_SYMBOL: str = "."
 
@@ -72,7 +74,9 @@ def get_file_from_extention(source_dir: Path, extention: str = None) -> list[Pat
     return [Path(file) for file in source_dir.rglob(pattern)]
 
 
-def make_achive(root_dir: Path, arch_dir_path: Path, format_: str = "zip") -> Path:
+def make_achive(
+    root_dir: Path, arch_dir_path: Path, format_: str = "zip"
+) -> Path:
     """Формирование архива"""
 
     return Path(
@@ -358,7 +362,9 @@ def command_run_export_rvt_to_nwc(source_path: Path, end_dir_path: Path):
         )
         logging.warning(warning_message)
     else:
-        end_dir_path: Path = end_dir_path.parent / (end_dir_path.stem + path_nwc.suffix)
+        end_dir_path: Path = end_dir_path.parent / (
+            end_dir_path.stem + path_nwc.suffix
+        )
         shutil.copy(path_nwc, end_dir_path)
 
     shutil.rmtree(copy_dir, ignore_errors=True)

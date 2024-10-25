@@ -16,7 +16,9 @@ from tests.functions import get_file_from_extention
 
 def test_get_models_in_project(project: Project):
     local_revit_model: list[RevitFileInLocal] = project.revit_files
-    revit_model_in_rs: list[RevitFileInRevitServer] = project.revit_files_in_rs
+    revit_model_in_rs: list[RevitFileInRevitServer] = (
+        project.revit_files_in_rs
+    )
     nwf_models: list[Path] = project.nwf_models
 
     count_items_in_rs: int = len(local_revit_model)
@@ -100,7 +102,9 @@ def test_load_models(project: Project):
     )
 
     arch_dir: Path = project.load_in_arch()
-    files: list[Path] = get_file_from_extention(source_dir=arch_dir, extention=".zip")
+    files: list[Path] = get_file_from_extention(
+        source_dir=arch_dir, extention=".zip"
+    )
     assert len(files) == 4, (
         "После архивации моделей должно получится 4 архива, "
         f"а выгрузилось {len(files)}"
@@ -108,7 +112,9 @@ def test_load_models(project: Project):
 
     NAME_ALBUM = "AR_TEST_ALBUM"
     arch_dir: Path = project.load_in_arch(NAME_ALBUM)
-    files: list[Path] = get_file_from_extention(source_dir=arch_dir, extention=".zip")
+    files: list[Path] = get_file_from_extention(
+        source_dir=arch_dir, extention=".zip"
+    )
     assert len(files) == 8, (
         "После архивации моделей должно получится 8 архивов, "
         f"а выгрузилось {len(files)}"

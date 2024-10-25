@@ -16,7 +16,9 @@ os.chdir(str(BASE_DIR))
 load_dotenv()
 
 TG_TOKEN: Final[str] = os.getenv(key="TG_TOKEN", default="notTelegramToken")
-CMD_NAME_PROJECT: Final[str] = os.getenv(key="CMD_NAME_PROJECT", default="999_TEST")
+CMD_NAME_PROJECT: Final[str] = os.getenv(
+    key="CMD_NAME_PROJECT", default="999_TEST"
+)
 
 PATH_JSON_DB: Path = BASE_DIR / "data.json"
 
@@ -39,10 +41,14 @@ START_LOAD_MESSAGE_PUBLISH: Final[str] = (
     "на ftp и в nawisworks)."
 )
 END_LOAD_MESSAGE_ARCH: Final[str] = "Архивация, закончена, "
-END_LOAD_MESSAGE_ARCH_ALBUM: Final[str] = "Архивация после выдачи альбомов, закончена, "
+END_LOAD_MESSAGE_ARCH_ALBUM: Final[str] = (
+    "Архивация после выдачи альбомов, закончена, "
+)
 END_LOAD_MESSAGE_BACKUP: Final[str] = "Бэкап моделей, завершен,"
 END_LOAD_MESSAGE_FTP: Final[str] = "Выгрузка моделей на FTP, завершена,"
-END_LOAD_MESSAGE_NAWISWORKS: Final[str] = "Выгрузка моделей Navisworks, завершена,"
+END_LOAD_MESSAGE_NAWISWORKS: Final[str] = (
+    "Выгрузка моделей Navisworks, завершена,"
+)
 END_LOAD_MESSAGE_PUBLISH: Final[str] = "Публикация моделей, завершена,"
 
 BUTTON_HELP: Final[str] = "help"

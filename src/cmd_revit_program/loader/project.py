@@ -79,7 +79,9 @@ class RevitFileInRevitServer:
 
 
 class RevitFileInLocal:
-    def __init__(self, model_path: Path, backup_path: Path, nwc_path: Path) -> None:
+    def __init__(
+        self, model_path: Path, backup_path: Path, nwc_path: Path
+    ) -> None:
         self.model_path: Path = model_path
 
         self.name: str = self.model_path.name
@@ -113,7 +115,9 @@ class Project:
         self.project_dir: ProjectDirThree = ProjectDirThree(
             project_dir_path, project_name
         )
-        self.arch_dir: ArchDirThree = ArchDirThree(arch_dir_path, project_name)
+        self.arch_dir: ArchDirThree = ArchDirThree(
+            arch_dir_path, project_name
+        )
         self.ftp_dir: FTPDirThree = FTPDirThree(ftp_dir_path, project_name)
 
         self.project_dir.create_dirs()
@@ -172,19 +176,27 @@ class Project:
 
     @property
     def ftp_models(self) -> list[Path]:
-        return get_file_from_extention(self.ftp_dir.revit_models, RVT_EXTENTION)
+        return get_file_from_extention(
+            self.ftp_dir.revit_models, RVT_EXTENTION
+        )
 
     @property
     def nwf_models(self) -> list[Path]:
-        return get_file_from_extention(self.project_dir.nawis_nwf, NWF_EXTENTION)
+        return get_file_from_extention(
+            self.project_dir.nawis_nwf, NWF_EXTENTION
+        )
 
     @property
     def nwc_models(self) -> list[Path]:
-        return get_file_from_extention(self.project_dir.nawis_nwc, NWC_EXTENTION)
+        return get_file_from_extention(
+            self.project_dir.nawis_nwc, NWC_EXTENTION
+        )
 
     @property
     def nwd_models(self) -> list[Path]:
-        return get_file_from_extention(self.project_dir.nawis_nwd, NWD_EXTENTION)
+        return get_file_from_extention(
+            self.project_dir.nawis_nwd, NWD_EXTENTION
+        )
 
     @property
     def ifc_models(self) -> list[Path]:
@@ -236,7 +248,9 @@ class Project:
                 nwd_path: Path = self.project_dir.nawis_nwd / (
                     nwf_path.stem + NWD_EXTENTION
                 )
-                nwd_path: Path = run_load_nwd(nwd_path=nwd_path, nwf_path=nwf_path)
+                nwd_path: Path = run_load_nwd(
+                    nwd_path=nwd_path, nwf_path=nwf_path
+                )
 
                 rename_nwd: Path = nwd_path.parent / (
                     nwd_path.stem + "_" + DATE_NOW + nwd_path.suffix

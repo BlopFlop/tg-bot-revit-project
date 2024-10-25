@@ -62,18 +62,18 @@ async def start_bot() -> None:
 
     application.add_handler(get_contacts_handler)
 
-    application.add_handler(CallbackQueryHandler(home_page, '/back'))
+    application.add_handler(CallbackQueryHandler(home_page, "/back"))
     application.add_handler(
-        CallbackQueryHandler(select_equipment, 'select_equipment')
+        CallbackQueryHandler(select_equipment, "select_equipment")
     )
     application.add_handler(
-        CallbackQueryHandler(not_enough_properties, 'not_enough_properties')
+        CallbackQueryHandler(not_enough_properties, "not_enough_properties")
     )
     application.add_handler(
-        CallbackQueryHandler(enough_properties, 'enough_properties')
+        CallbackQueryHandler(enough_properties, "enough_properties")
     )
-    application.add_handler(CallbackQueryHandler(step_back, '/step_back'))
-    application.add_handler(CallbackQueryHandler(communicate, '/communicate'))
+    application.add_handler(CallbackQueryHandler(step_back, "/step_back"))
+    application.add_handler(CallbackQueryHandler(communicate, "/communicate"))
     application.add_handler(CallbackQueryHandler(button))
 
     async with application:

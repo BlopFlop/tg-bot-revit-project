@@ -50,7 +50,9 @@ class DirThreeMixin:
     def check_dir_project(self, path_dir: Path) -> Path:
         if path_dir.is_dir():
             return path_dir
-        except_message: str = f"Базовой директории не существует {str(path_dir)}"
+        except_message: str = (
+            f"Базовой директории не существует {str(path_dir)}"
+        )
         logging.error(except_message, stack_info=True)
         raise DirectoryNotFoundError(except_message)
 
@@ -68,15 +70,21 @@ class ArchDirThree(DirThreeMixin):
         backup_dir: Path = path_dir / self._BACKUP_DIR
 
         if not path_dir.is_dir():
-            except_message: str = f"Базовой директории не существует {str(path_dir)}"
+            except_message: str = (
+                f"Базовой директории не существует {str(path_dir)}"
+            )
             logging.error(except_message, stack_info=True)
             raise DirectoryNotFoundError(except_message)
         elif not arch_dir.is_dir():
-            except_message: str = f"Архивной директории не существует {str(arch_dir)}"
+            except_message: str = (
+                f"Архивной директории не существует {str(arch_dir)}"
+            )
             logging.error(except_message, stack_info=True)
             raise DirectoryNotFoundError(except_message)
         elif not backup_dir.is_dir():
-            except_message: str = f"Бэкап директории не существует {str(backup_dir)}"
+            except_message: str = (
+                f"Бэкап директории не существует {str(backup_dir)}"
+            )
             logging.error(except_message, stack_info=True)
             raise DirectoryNotFoundError(except_message)
         return path_dir
@@ -271,7 +279,9 @@ class RevitFileInRevitServer:
 
 
 class RevitFileInLocal:
-    def __init__(self, model_path: Path, backup_path: Path, nwc_path: Path) -> None:
+    def __init__(
+        self, model_path: Path, backup_path: Path, nwc_path: Path
+    ) -> None:
         self.model_path: Path = model_path
 
         self.name: str = self.model_path.name
@@ -305,7 +315,9 @@ class Project:
         self.project_dir: ProjectDirThree = ProjectDirThree(
             project_dir_path, project_name
         )
-        self.arch_dir: ArchDirThree = ArchDirThree(arch_dir_path, project_name)
+        self.arch_dir: ArchDirThree = ArchDirThree(
+            arch_dir_path, project_name
+        )
         self.ftp_dir: FTPDirThree = FTPDirThree(ftp_dir_path, project_name)
 
         self.project_dir.create_dirs()
@@ -364,19 +376,27 @@ class Project:
 
     @property
     def ftp_models(self) -> list[Path]:
-        return get_file_from_extention(self.ftp_dir.revit_models, RVT_EXTENTION)
+        return get_file_from_extention(
+            self.ftp_dir.revit_models, RVT_EXTENTION
+        )
 
     @property
     def nwf_models(self) -> list[Path]:
-        return get_file_from_extention(self.project_dir.nawis_nwf, NWF_EXTENTION)
+        return get_file_from_extention(
+            self.project_dir.nawis_nwf, NWF_EXTENTION
+        )
 
     @property
     def nwc_models(self) -> list[Path]:
-        return get_file_from_extention(self.project_dir.nawis_nwc, NWC_EXTENTION)
+        return get_file_from_extention(
+            self.project_dir.nawis_nwc, NWC_EXTENTION
+        )
 
     @property
     def nwd_models(self) -> list[Path]:
-        return get_file_from_extention(self.project_dir.nawis_nwd, NWD_EXTENTION)
+        return get_file_from_extention(
+            self.project_dir.nawis_nwd, NWD_EXTENTION
+        )
 
     @property
     def ifc_models(self) -> list[Path]:
@@ -428,7 +448,9 @@ class Project:
                 nwd_path: Path = self.project_dir.nawis_nwd / (
                     nwf_path.stem + NWD_EXTENTION
                 )
-                nwd_path: Path = run_load_nwd(nwd_path=nwd_path, nwf_path=nwf_path)
+                nwd_path: Path = run_load_nwd(
+                    nwd_path=nwd_path, nwf_path=nwf_path
+                )
 
                 rename_nwd: Path = nwd_path.parent / (
                     nwd_path.stem + "_" + DATE_NOW + nwd_path.suffix
@@ -475,4 +497,3 @@ class Project:
             make_achive(new_dir, new_dir)
 
         return pub_dir.parent
-

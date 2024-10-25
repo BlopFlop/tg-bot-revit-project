@@ -13,7 +13,9 @@ class DirThreeMixin:
     def check_dir_project(self, path_dir: Path) -> Path:
         if path_dir.is_dir():
             return path_dir
-        except_message: str = f"Базовой директории не существует {str(path_dir)}"
+        except_message: str = (
+            f"Базовой директории не существует {str(path_dir)}"
+        )
         logging.error(except_message, stack_info=True)
         raise DirectoryNotFoundError(except_message)
 
@@ -31,15 +33,21 @@ class ArchDirThree(DirThreeMixin):
         backup_dir: Path = path_dir / self._BACKUP_DIR
 
         if not path_dir.is_dir():
-            except_message: str = f"Базовой директории не существует {str(path_dir)}"
+            except_message: str = (
+                f"Базовой директории не существует {str(path_dir)}"
+            )
             logging.error(except_message, stack_info=True)
             raise DirectoryNotFoundError(except_message)
         elif not arch_dir.is_dir():
-            except_message: str = f"Архивной директории не существует {str(arch_dir)}"
+            except_message: str = (
+                f"Архивной директории не существует {str(arch_dir)}"
+            )
             logging.error(except_message, stack_info=True)
             raise DirectoryNotFoundError(except_message)
         elif not backup_dir.is_dir():
-            except_message: str = f"Бэкап директории не существует {str(backup_dir)}"
+            except_message: str = (
+                f"Бэкап директории не существует {str(backup_dir)}"
+            )
             logging.error(except_message, stack_info=True)
             raise DirectoryNotFoundError(except_message)
         return path_dir
@@ -192,7 +200,8 @@ class FTPDirThree(DirThreeMixin):
 def get_or_create_dir(path_dir: Path) -> Path:
     if path_dir.is_file():
         except_message = (
-            "Произошла ошибка вы передали в функцию путь до" " файла, а не директории."
+            "Произошла ошибка вы передали в функцию путь до"
+            " файла, а не директории."
         )
         logging.error(except_message, stack_info=True)
         raise DirectoryNotFoundError(except_message)

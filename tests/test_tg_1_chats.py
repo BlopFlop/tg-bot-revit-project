@@ -10,7 +10,9 @@ def test_chat_file(tmpdir):
     base_dir = Path(tmpdir)
     data_chat = DataChat(base_dir=base_dir).csv_file
 
-    assert data_chat.is_file(), f"По пути {data_chat} должен создаться csv файл."
+    assert (
+        data_chat.is_file()
+    ), f"По пути {data_chat} должен создаться csv файл."
 
 
 def test_add_chat(tmpdir):

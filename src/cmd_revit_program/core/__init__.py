@@ -8,7 +8,9 @@ from cmd_revit_program.core.constants import (
 )
 from cmd_revit_program.core.validations import is_dir_or_file
 
-revit_setup = f"Программа Revit {CMD_NAWIS_OR_REVIT_VERSION} присутсвует на пк."
+revit_setup = (
+    f"Программа Revit {CMD_NAWIS_OR_REVIT_VERSION} присутсвует на пк."
+)
 revit_not_setup_message = (
     f"Программа Revit {CMD_NAWIS_OR_REVIT_VERSION} не установленна или "
     "установленна с ошибкой на данном пк"
@@ -23,7 +25,9 @@ rst_not_setup_message = (
 is_dir_or_file(PATH_REVIT_RST, rst_setup_message, rst_not_setup_message)
 
 
-nawis_setup_message = f"Программа Navisworks {CMD_NAWIS_OR_REVIT_VERSION} установлена."
+nawis_setup_message = (
+    f"Программа Navisworks {CMD_NAWIS_OR_REVIT_VERSION} установлена."
+)
 nawis_not_setup_message = (
     f"Программа Navisworks {CMD_NAWIS_OR_REVIT_VERSION} не установлена на пк."
 )
@@ -43,4 +47,6 @@ roamer_not_setup_message = (
     f"По пути {PATH_NAWIS_ROAMER}, программа Roamer была неккоректно "
     "установлена."
 )
-is_dir_or_file(PATH_NAWIS_ROAMER, roamer_setup_message, roamer_not_setup_message)
+is_dir_or_file(
+    PATH_NAWIS_ROAMER, roamer_setup_message, roamer_not_setup_message
+)

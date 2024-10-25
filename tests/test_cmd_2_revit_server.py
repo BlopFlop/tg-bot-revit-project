@@ -22,7 +22,8 @@ def test_get_all_models_for_server_name():
         REVIT_SERVER_NAME
     )
     assert isinstance(all_revit_models, list), (
-        "В результате получения моделей из ревит серевера, " "должен вернуться список."
+        "В результате получения моделей из ревит серевера, "
+        "должен вернуться список."
     )
 
 
@@ -47,7 +48,8 @@ def test_get_model_for_mask(all_revit_models: list[ModelInfo]):
     count_revit_models = len(result_revit_models)
 
     assert isinstance(result_revit_models, list), (
-        "В результате получения моделей из ревит серевера, " "должен вернуться список."
+        "В результате получения моделей из ревит серевера, "
+        "должен вернуться список."
     )
 
     assert count_revit_models == 1, (

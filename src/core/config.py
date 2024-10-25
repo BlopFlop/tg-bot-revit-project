@@ -20,7 +20,7 @@ class Settings(BaseSettings):
 
     name_company: str = "SomeCompany"
 
-    tg_token: str = 'tg_token'
+    tg_token: str = "tg_token"
 
     postgres_db: str = Field(alias="POSTGRES_DB")
     postgres_user: str = Field(alias="POSTGRES_USER")
