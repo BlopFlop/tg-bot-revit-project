@@ -38,9 +38,7 @@ def arch_dir_obj(tmpdir) -> ArchDirThree:
     mkdir_arch = tmpdir.mkdir("Archive")
     mkdir_arch.mkdir(ArchDirThree._ARCH_DIR)
     mkdir_arch.mkdir(ArchDirThree._BACKUP_DIR)
-    arch_dir_three: ArchDirThree = ArchDirThree(
-        Path(mkdir_arch), PROJECT_NAME
-    )
+    arch_dir_three: ArchDirThree = ArchDirThree(Path(mkdir_arch), PROJECT_NAME)
     arch_dir_three.create_dirs()
     return arch_dir_three
 
@@ -49,9 +47,7 @@ def arch_dir_obj(tmpdir) -> ArchDirThree:
 def project_dir_obj(tmpdir) -> ProjectDirThree:
 
     path_project: Path = Path(tmpdir.mkdir("Project"))
-    project_dir_three: ProjectDirThree = ProjectDirThree(
-        path_project, PROJECT_NAME
-    )
+    project_dir_three: ProjectDirThree = ProjectDirThree(path_project, PROJECT_NAME)
     project_dir_three.create_dirs()
     return project_dir_three
 
@@ -155,7 +151,5 @@ def project(
 @pytest.fixture
 def exe_program() -> Path:
     exe_file = BASE_DIR / "cmd_program.exe"
-    assert (
-        exe_file.is_file()
-    ), f"Файл {exe_file.name} не найден, тест не будет запущен."
+    assert exe_file.is_file(), f"Файл {exe_file.name} не найден, тест не будет запущен."
     return exe_file

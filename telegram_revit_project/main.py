@@ -22,7 +22,7 @@ from telegram_revit_project.constants import (
     START_LOAD_MESSAGE_ARCH_ALBUM,
     START_LOAD_MESSAGE_FTP,
     START_LOAD_MESSAGE_NAWISWORKS,
-    START_LOAD_MESSAGE_PUBLISH
+    START_LOAD_MESSAGE_PUBLISH,
 )
 from telegram_revit_project.functions import DataChat, send_message_all_chats
 
@@ -92,9 +92,7 @@ class TgBot:
         )
 
         message = f"Привет {name}, ты в ТГ боте проекта {CMD_NAME_PROJECT}."
-        context.bot.send_message(
-            chat_id=chat.id, text=message, reply_markup=button
-        )
+        context.bot.send_message(chat_id=chat.id, text=message, reply_markup=button)
         logging.debug("BotCommand: Вызов команды пробуждения бота.")
         self.add_in_project(update, context)
 
@@ -131,9 +129,7 @@ class TgBot:
 
         context.bot.send_message(chat_id=current_chat_id, text=message)
 
-    def remove_in_project(
-        self, update: Update, context: ContextTypes
-    ) -> None:
+    def remove_in_project(self, update: Update, context: ContextTypes) -> None:
         current_chat_id = update.effective_chat.id
 
         if current_chat_id not in self.chats.get():
@@ -167,9 +163,7 @@ class TgBot:
         if self._track_process(update, context):
             chat_id = update.effective_chat.id
             bot = context.bot
-            bot.send_message(
-                chat_id=chat_id, text=START_LOAD_MESSAGE_NAWISWORKS
-            )
+            bot.send_message(chat_id=chat_id, text=START_LOAD_MESSAGE_NAWISWORKS)
             self.process_ = subprocess.Popen(args=cmd_arguments)
 
     def publish(self, update: Update, context: ContextTypes) -> None:
@@ -179,9 +173,7 @@ class TgBot:
         if self._track_process(update, context):
             chat_id = update.effective_chat.id
             bot = context.bot
-            bot.send_message(
-                chat_id=chat_id, text=START_LOAD_MESSAGE_PUBLISH
-            )
+            bot.send_message(chat_id=chat_id, text=START_LOAD_MESSAGE_PUBLISH)
             self.process_ = subprocess.Popen(args=cmd_arguments)
 
     def arch_album(self, update: Update, context: ContextTypes) -> None:
@@ -191,21 +183,19 @@ class TgBot:
             "arch",
             "--name_album",
             name_album,
-            "--tg_mode"
+            "--tg_mode",
         )
 
         if self._track_process(update, context):
             chat_id = update.effective_chat.id
             bot = context.bot
-            bot.send_message(
-                chat_id=chat_id, text=START_LOAD_MESSAGE_ARCH_ALBUM
-            )
+            bot.send_message(chat_id=chat_id, text=START_LOAD_MESSAGE_ARCH_ALBUM)
             self.process_ = subprocess.Popen(args=cmd_arguments)
 
     def message_start(self):
         send_message_all_chats(
             self.bot,
-            message="Телеграм бот запущен нажми /start, для обновления кнопок."
+            message="Телеграм бот запущен нажми /start, для обновления кнопок.",
         )
 
     def start_updater(self) -> Updater:

@@ -1,9 +1,7 @@
 from pathlib import Path
 
 
-def get_file_from_extention(
-    source_dir: Path, extention: str = None
-) -> list[Path]:
+def get_file_from_extention(source_dir: Path, extention: str = None) -> list[Path]:
     """Рекурсивное получение путей до файлов в древе директориий."""
     DOT_SYMBOL: str = "."
 
