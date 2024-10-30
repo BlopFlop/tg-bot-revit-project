@@ -1,6 +1,6 @@
 # tg-bot-revit-project
 ---
-h1 Проект tg-bot-revit-project представляет собой 3 программы:
+- Проект tg-bot-revit-project представляет собой 3 программы:
 1. tg_bot.exe - Телеграмм бот.
 2. cmd_command.exe - Консольное приложение, функция которого, выгружать модели.
 3. dir_checks.exe - Программа следящая за директорией.
@@ -15,7 +15,7 @@ h2 Функционал Телеграм бота(tg_bot.exe):
 архива с моделями.
 5. Сообщение  #d <Имя альбома>, запускает cmd_command.exe с аргументами "arch_album, -na(--name_album) <Имя альбома>, 
 -ud(--update_json)", и формирует архив после выдачи альбомов с датой и именем указанным в <Имя альбома>
-h2 Функционал консольного приложения(cmd_command.exe), возможен запуск отдельно от телеграм бота со следующими аргументами:
+- Функционал консольного приложения(cmd_command.exe), возможен запуск отдельно от телеграм бота со следующими аргументами:
 1. arch - Архивация всех моделей(.rvt, .nwc, .nwf, .nwd, .ifc) младше 1-ой недели.
 2. arch-album --name_album <Имя архива после выдачи альбомов> - То-же что и arch, но при этом добавляется к имени
 архива имя альбома.
@@ -26,14 +26,14 @@ h2 Функционал консольного приложения(cmd_command.
 7. -h --help - Необязательный аргумент. Получение информации о функционале программы.
 9. -sm --silence-mode - Необязательный аргумент. Запускает программу в тихом режиме, не информируя пользователей tg бота
 о процессах.
-* - Вся информация о путях до моделей на сервере, берется из RevitServer.
-h2 Функционал программы следящей за директорией (dir_checks.exe):
+- Вся информация о путях до моделей на сервере, берется из RevitServer.
+- Функционал программы следящей за директорией (dir_checks.exe):
 Проверяет действия в папке указанную в гугл доке, запускается одновременно с tg_bot.exe.
 
 
 # Технологии
-Python 3.11
-Telegram API
+- Python 3.11
+- Telegram API
 
 
 # Авторы
@@ -41,9 +41,9 @@ BlopFlop(ArturYoungBlood)
 
 
 # Документация
-[Telegram API](https://docs.python-telegram-bot.org/en/v21.0.1/)
-[Google Sheets API](https://developers.google.com/sheets?hl=ru)
-[Google Disk API](https://developers.google.com/drive?hl=ru)
+- [Telegram API](https://docs.python-telegram-bot.org/en/v21.0.1/)
+- [Google Sheets API](https://developers.google.com/sheets?hl=ru)
+- [Google Disk API](https://developers.google.com/drive?hl=ru)
 
 
 # Инструкции
