@@ -2,7 +2,9 @@ import logging
 from pathlib import Path
 from typing import Final
 
-from cmd_revit_program.core.exceptions import DirectoryNotFoundError
+from src.core.exceptions import DirectoryNotFoundError
+
+from src.revit_project.functions import get_or_create_dir
 
 
 class DirThreeMixin:
@@ -195,20 +197,3 @@ class FTPDirThree(DirThreeMixin):
             self.documents,
         ]
         return list(map(get_or_create_dir, items_))
-
-
-def get_or_create_dir(path_dir: Path) -> Path:
-    if path_dir.is_file():
-        except_message = (
-            "Произошла ошибка вы передали в функцию путь до"
-            " файла, а не директории."
-        )
-        logging.error(except_message, stack_info=True)
-        raise DirectoryNotFoundError(except_message)
-
-    if not path_dir.is_dir():
-        path_dir.mkdir()
-        info_message = f"Директория {path_dir.name} создана"
-        logging.info(info_message)
-
-    return path_dir

@@ -20,13 +20,13 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from core.config import settings
 from core.db import get_async_session
-from models.administration_user import AdministrationUser
-from schemas.administration_user import AdministrationUserCreate
+from src.models.admin_user import AdminUser
+from src.schemas.admin_user import AdminUserCreate
 
 
 async def get_user_db(session: AsyncSession = Depends(get_async_session)):
     """Асинхронный генератор доступа к БД."""
-    yield SQLAlchemyUserDatabase(session, AdministrationUser)
+    yield SQLAlchemyUserDatabase(session, AdminUser)
 
 
 bearer_transport = BearerTransport(tokenUrl="auth/jwt/login")
@@ -44,13 +44,13 @@ auth_backend = AuthenticationBackend(
 )
 
 
-class UserManager(IntegerIDMixin, BaseUserManager[AdministrationUser, int]):
+class UserManager(IntegerIDMixin, BaseUserManager[AdminUser, int]):
     """Need docstring."""
 
     async def validate_password(
         self,
         password: str,
-        user: Union[AdministrationUserCreate, AdministrationUser],
+        user: Union[AdminUserCreate, AdminUser],
     ) -> None:
         """Need docstring."""
         if len(password) < 3:
@@ -63,7 +63,7 @@ class UserManager(IntegerIDMixin, BaseUserManager[AdministrationUser, int]):
             )
 
     async def on_after_register(
-        self, user: AdministrationUser, request: Optional[Request] = None
+        self, user: AdminUser, request: Optional[Request] = None
     ):
         """Вывод сообщения о регистрации."""
         print(f"Пользователь {user.email} зарегистрирован.")
@@ -78,7 +78,7 @@ async def get_user_manager(user_db=Depends(get_user_db)):
     yield UserManager(user_db, password_helper)
 
 
-fastapi_users = FastAPIUsers[AdministrationUser, int](
+fastapi_users = FastAPIUsers[AdminUser, int](
     get_user_manager,
     [auth_backend],
 )

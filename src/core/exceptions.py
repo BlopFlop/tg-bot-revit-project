@@ -1,16 +1,13 @@
 class DirectoryNotFoundError(Exception):
-    """Выбрасывается если директории не сущестует."""
-
+    """Emergency if the directory does not exist."""
     pass
 
 
 class RevitFileNotFoundError(Exception):
-    """Выбрасывается если ревит моделей не существует."""
-
+    """Emergency if the revit model does not exist."""
     pass
 
 
 class ProgramNotSetup(Exception):
-    """Выбрасывается если какой либо программы или компонента не существует."""
-
+    """Emergency if the program does not setup."""
     pass
