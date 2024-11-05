@@ -4,8 +4,8 @@ from fastapi_users.exceptions import UserAlreadyExists
 from pydantic import EmailStr
 
 from src.core.admin_user import get_user_db, get_user_manager
-from core.config import settings
-from core.db import get_async_session
+from src.core.config import settings
+from src.core.db import get_async_session
 from src.schemas.admin_user import AdminUserCreate
 
 get_async_session_context = contextlib.asynccontextmanager(get_async_session)

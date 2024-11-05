@@ -1,19 +1,19 @@
-from src.core.exceptions import DirectoryNotFoundError, ProgramNotSetup
-
 import logging
 import shutil
 from multiprocessing import Pool
 from pathlib import Path
 from subprocess import run
-from typing import Callable
+from typing import Callable, Union
 
 import rpws
-import rpws.exceptions
+from rpws.exceptions import ServerConnectionError
 from rpws import RevitServer
 from rpws.models import ModelInfo
 from rpws.server import sroots
 
+from src.core.rpws_patch import PatchRevitServer
 from src.core.constants import PATH_REVIT_RST
+from src.core.exceptions import DirectoryNotFoundError, ProgramNotSetup
 
 
 class control_workdir:
@@ -28,7 +28,7 @@ class control_workdir:
         shutil.rmtree(self.path_dir, ignore_errors=True)
 
 
-def get_file_from_extention(
+def get_file_from_ext(
     source_dir: Path, extention: str = None
 ) -> list[Path]:
     """Рекурсивное получение путей до файлов в древе директориий."""
@@ -51,14 +51,14 @@ def hascyr(s: str) -> bool:
 
 
 def get_support_version_revit(
-        start_age_ver: int, end_age_ver: int
-) -> dict[str: str]:
+    start_age_ver: int, end_age_ver: int
+) -> dict[str:str]:
     URL_PATH_FROM_RS: str = (
         "/RevitServerAdminRESTService{}/AdminRESTService.svc"
     )
     sroots = {
         str(version): URL_PATH_FROM_RS.format(version)
-        for version in range(start_age_ver, end_age_ver+1)
+        for version in range(start_age_ver, end_age_ver + 1)
     }
     return sroots
 
@@ -69,7 +69,7 @@ def pool_func(start_process_func: Callable, pool_items: list) -> None:
         pool.map(start_process_func, pool_items)
 
 
-def get_file_from_extention(
+def get_file_from_ext(
     source_dir: Path, extention: str = None
 ) -> list[Path]:
     """Рекурсивное получение путей до файлов в древе директориий."""
@@ -100,32 +100,27 @@ def make_achive(
     )
 
 
-def get_all_models_in_revit_server(revit_server_name: str) -> list[ModelInfo]:
-    """Get all models in revit server."""
-    result_model_items = []
+def get_models_in_revit_server(
+        revit_server_name: str, version: int
+) -> list[ModelInfo]:
+    """Get all models in revit server with current version Revit."""
+    revit_server = PatchRevitServer(revit_server_name, version)
 
     try:
-        for version in sroots:
-            revit_server = RevitServer(revit_server_name, version)
+        result_model_items = [
+            models for items in revit_server.walk()
+            for models in items[3]
+            if items[3]
+        ]
+        return result_model_items
 
-            try:
-                revit_server.getinfo()
-            except rpws.exceptions.ServerFileNotFound:
-                continue
-
-            for items in revit_server.walk():
-                models: list[ModelInfo] = items[3]
-                if models:
-                    for model in models:
-                        result_model_items.append(model)
-    except Exception:
+    except ServerConnectionError:
         warning_message = (
-            "Переданное имя ревит сервера неккоректное, или такого ревит"
-            " сервера не существует в сети пк."
+            f"Переданное имя ревит сервера {revit_server_name} неккоректное,"
+            " или такого ревит сервера не существует в сети пк."
         )
         logging.warning(warning_message)
-
-    return result_model_items
+        return list()
 
 
 def get_model_for_mask(
@@ -151,7 +146,7 @@ def get_model_for_mask(
 
 def command_run_model_in_rs(
     server_name: str, source_path_model: Path, end_path_model: Path
-) -> Path | None:
+) -> Union[Path, None]:
     """Старт выгрузки моделей из ревит сервера"""
     RST_COMMAND_CREATE_LOCAL_MODEL = "l"
     RST_FLAG_SERVER = "-d"
@@ -204,7 +199,7 @@ def get_or_create_dir(path_dir: Path) -> Path:
 
 def is_dir_or_file(
     path: Path, confirm_message: str, except_message: str
-) -> None | ProgramNotSetup:
+) -> Union[Exception, None]:
     if not (path.is_dir() or path.is_file()):
         logging.error(except_message)
         raise ProgramNotSetup(except_message)

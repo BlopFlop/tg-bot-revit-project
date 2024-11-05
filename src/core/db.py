@@ -12,7 +12,7 @@ from sqlalchemy.orm import (
     sessionmaker,
 )
 
-from core.config import settings
+from src.core.config import settings
 
 
 class PreBase:

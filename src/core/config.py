@@ -4,15 +4,13 @@ from typing import Optional
 
 from pydantic import EmailStr, Field
 from pydantic_settings import BaseSettings
+
+from src.core.constants import (
+    BASE_DIR, ENV_PATH, LOG_DIR, LOG_FILE, LOG_FORMAT
+)
+
 # from rpws.server import sroots
 
-from core.constants import (
-    BASE_DIR,
-    ENV_PATH,
-    LOG_DIR,
-    LOG_FILE,
-    LOG_FORMAT,
-)
 
 
 class Settings(BaseSettings):

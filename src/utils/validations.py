@@ -1,7 +1,7 @@
 import logging
 from pathlib import Path
 
-from cmd_revit_program.core.exceptions import ProgramNotSetup
+from src.core.exceptions import ProgramNotSetup
 
 
 def is_dir_or_file(

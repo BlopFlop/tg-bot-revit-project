@@ -1,6 +1,6 @@
-from typing import Final
 import getpass
 import socket
+from typing import Final
 
 import rpws
 from rpws.server import RevitServer
@@ -11,7 +11,7 @@ RESTService: str = "/RevitServerAdminRESTService{}/AdminRESTService.svc"
 class PatchRevitServer(RevitServer):
     """Revit server object, add support new version Revit."""
 
-    PATCH_SROOTS: Final[dict[str: str]] = {
+    PATCH_SROOTS: Final[dict[str:str]] = {
         str(version): RESTService.format(version)
         for version in range(2012, 2025)
     }

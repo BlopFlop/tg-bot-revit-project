@@ -18,8 +18,8 @@ from pwdlib import PasswordHash
 from pwdlib.hashers.argon2 import Argon2Hasher
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from core.config import settings
-from core.db import get_async_session
+from src.core.config import settings
+from src.core.db import get_async_session
 from src.models.admin_user import AdminUser
 from src.schemas.admin_user import AdminUserCreate
 

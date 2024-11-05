@@ -1,5 +1,5 @@
-import sys
 import os
+import sys
 from pathlib import Path
 from typing import Final
 
@@ -16,7 +16,7 @@ LOG_FORMAT: Final[str] = '"%(asctime)s - [%(levelname)s] - %(message)s"'
 ENV_PATH: Final[Path] = BASE_DIR.parent / r"infra//.env"
 
 STATIC_PATH: Final[Path] = BASE_DIR / "static"
-LOCAL_REVIT_PATH: Final[Path] = BASE_DIR / "local_revit_models"
+# LOCAL_REVIT_PATH: Final[Path] = BASE_DIR / "local_revit_models"
 LOCAL_NAWISWORKS_PATH: Final[Path] = BASE_DIR / "load_from_nawis"
 
 # LOGO_PNG_PATH: Final[Path] = STATIC_PATH / "logo.png"
@@ -48,22 +48,24 @@ FTP_DIR: Final[Path] = Path(
 TG_TOKEN: Final[str] = os.getenv(key="TG_TOKEN", default="notTelegramToken")
 
 PATH_REVIT: Final[str] = r"C:\Program Files\Autodesk\Revit {}"
-PATH_NAWISWORKS: Final[str] = r"C:\Program Files\Autodesk\Navisworks Manage {}"
-
-PATH_REVIT_RST: Final[str] = (
-    "\\".join((PATH_REVIT, r"RevitServerToolCommand\RevitServerTool.exe"))
+PATH_NAWISWORKS: Final[str] = (
+    r"C:\Program Files\Autodesk\Navisworks Manage {}"
 )
 
-PATH_NAWIS_FTR: Final[str] = (
-    "\\".join((PATH_NAWISWORKS, "FiletoolsTaskRunner.exe"))
+PATH_REVIT_RST: Final[str] = "\\".join(
+    (PATH_REVIT, r"RevitServerToolCommand\RevitServerTool.exe")
+)
+
+PATH_NAWIS_FTR: Final[str] = "\\".join(
+    (PATH_NAWISWORKS, "FiletoolsTaskRunner.exe")
 )
 PATH_NAWIS_ROAMER: Final[str] = "\\".join((PATH_NAWISWORKS, "Roamer.exe"))
 
-RVT_EXTENTION: Final[str] = ".rvt"
-NWF_EXTENTION: Final[str] = ".nwf"
-NWC_EXTENTION: Final[str] = ".nwc"
-NWD_EXTENTION: Final[str] = ".nwd"
-IFC_EXTENTION: Final[str] = ".ifc"
+RVT_EXT: Final[str] = ".rvt"
+NWF_EXT: Final[str] = ".nwf"
+NWC_EXT: Final[str] = ".nwc"
+NWD_EXT: Final[str] = ".nwd"
+IFC_EXT: Final[str] = ".ifc"
 
 # argparse
 # ARG_START_ARCH: Final[str] = "arch"

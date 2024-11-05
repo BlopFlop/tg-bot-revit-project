@@ -1,25 +1,25 @@
 from pathlib import Path
 
 import pytest
-from rpws.models import ModelInfo
-
-from cmd_revit_program.loader.functions import (
-    get_all_models_in_revit_server,
-    get_model_for_mask,
-)
 from tests.constants import (
     INCORRECT_SEARCH_NAME,
     INCORRECT_SERVER_NAME,
     REVIT_MODEL_NAME,
     REVIT_SERVER_NAME,
+    VER_REVIT,
     SEARCH_NAME,
     TEST_PATH_MODEL,
 )
+from src.revit_project.functions import (
+    get_models_in_revit_server,
+    get_model_for_mask,
+)
+from rpws.models import ModelInfo
 
 
 def test_get_all_models_for_server_name():
-    all_revit_models: list[ModelInfo] = get_all_models_in_revit_server(
-        REVIT_SERVER_NAME
+    all_revit_models: list[ModelInfo] = get_models_in_revit_server(
+        REVIT_SERVER_NAME, VER_REVIT
     )
     assert isinstance(all_revit_models, list), (
         "В результате получения моделей из ревит серевера, "
@@ -28,8 +28,8 @@ def test_get_all_models_for_server_name():
 
 
 def test_get_all_models_for_incorrect_server_name():
-    all_revit_models: list[ModelInfo] = get_all_models_in_revit_server(
-        INCORRECT_SERVER_NAME
+    all_revit_models: list[ModelInfo] = get_models_in_revit_server(
+        INCORRECT_SERVER_NAME, VER_REVIT
     )
     assert isinstance(all_revit_models, list), (
         "В результате получения моделей из неккоректного ревит серевера, "

@@ -1,18 +1,18 @@
 import logging
 from pathlib import Path
-from typing import Final
 from shutil import copy2, rmtree
 from subprocess import run
+from typing import Final, Union
 
 from transliterate import translit
 
+from src.core.constants import NWC_EXT, NWF_EXT, RVT_EXT
 from src.revit_project.functions import hascyr
-from src.core.constants import RVT_EXTENTION, NWF_EXTENTION, NWC_EXTENTION
 
 
 def _mk_txt_from_rvt(path_rvt_file: Path) -> Path:
     """Формирование txt из rvt файла."""
-    name_txt_file: Path = path_rvt_file.name.replace(RVT_EXTENTION, ".txt")
+    name_txt_file: Path = path_rvt_file.name.replace(RVT_EXT, ".txt")
     path_txt_file: Path = path_rvt_file.parent / name_txt_file
 
     with open(path_txt_file, mode="w", encoding="utf-8") as txt_file:
@@ -23,11 +23,11 @@ def _mk_txt_from_rvt(path_rvt_file: Path) -> Path:
 
 
 def load_model_in_rs(
-    paht_revit_rst: Path,
+    path_revit_rst: Path,
     server_name: str,
     source_path_model: Path,
-    end_path_model: Path
-) -> Path | None:
+    end_path_model: Path,
+) -> Union[Path, None]:
     """Старт выгрузки моделей из ревит сервера"""
     RST_COMMAND_CREATE_LOCAL_MODEL = "l"
     RST_FLAG_SERVER = "-d"
@@ -40,13 +40,13 @@ def load_model_in_rs(
     try:
         run(
             [
-                paht_revit_rst,
+                str(path_revit_rst),
                 RST_COMMAND_CREATE_LOCAL_MODEL,
-                source_path_model,
+                str(source_path_model),
                 RST_FLAG_DESTINATION,
                 server_name,
                 RST_FLAG_SERVER,
-                end_path_model,
+                str(end_path_model),
                 RST_FLAG_OVERWRITE,
             ]
         )
@@ -65,7 +65,7 @@ def export_rvt_to_nwc(
     path_nawis_ftr: Path,
     local_nawisworks_path: Path,
     source_path: Path,
-    end_dir_path: Path
+    end_dir_path: Path,
 ) -> Path:
     """Старт выгрузки в формат nwc."""
 
@@ -75,10 +75,10 @@ def export_rvt_to_nwc(
     FTR_SECOND_FLAG: Final[str] = r"/of"
     FTR_THIRD_FLAG: Final[str] = r"/version"
 
-    if RVT_EXTENTION not in source_path.name:
+    if RVT_EXT not in source_path.name:
         except_message = (
             "Возникла ошибка при создании txt файла, в функцифю передан "
-            + f"путь {source_path}, без расширения {RVT_EXTENTION}."
+            + f"путь {source_path}, без расширения {RVT_EXT}."
         )
         logging.error(except_message, exc_info=True)
         raise ValueError(except_message)
@@ -86,8 +86,9 @@ def export_rvt_to_nwc(
     str_in_ru_sybmols = hascyr(str(source_path.stem))
 
     if str_in_ru_sybmols:
-        translit_name_dir = translit(source_path.stem, 'ru')
-        copy_dir = local_nawisworks_path / str(translit_name_dir)
+        translit_name_dir = translit(source_path.stem, "ru", reversed=True)
+        translit_name_dir = translit_name_dir + RVT_EXT
+        copy_dir = local_nawisworks_path / translit_name_dir
     else:
         copy_dir = local_nawisworks_path / source_path.stem
 
@@ -102,26 +103,24 @@ def export_rvt_to_nwc(
 
     path_txt = _mk_txt_from_rvt(source_path)
 
-    name_nwf: str = source_path.stem + NWF_EXTENTION
+    name_nwf: str = source_path.stem + NWF_EXT
     path_nwf: Path = copy_dir / name_nwf
 
-    name_nwc: str = source_path.stem + NWC_EXTENTION
+    name_nwc: str = source_path.stem + NWC_EXT
     path_nwc: Path = copy_dir / name_nwc
 
     info_message = "Запуск утилиты для выгрузки файла " + source_path.name
     logging.info(info_message)
 
-    command_items: tuple[str] = (
-        path_nawis_ftr,
+    run((
+        str(path_nawis_ftr),
         FTR_FIRST_FLAG,
-        path_txt,
+        str(path_txt),
         FTR_SECOND_FLAG,
-        path_nwf,
+        str(path_nwf),
         FTR_THIRD_FLAG,
         VER_NAWIS_2019,
-    )
-
-    run(command_items)
+    ))
 
     if not path_nwc.is_file():
         warning_message = (
@@ -142,7 +141,7 @@ def export_nwf_to_nwd(
     path_nawis_roamer: Path,
     nwd_path: Path,
     nwf_path: Path
-) -> Path | None:
+) -> Union[Path, None]:
     """Старт выгрузки моделей в формат nwd"""
     ROAMER_FLAG_NWD: str = "-nwd"
 

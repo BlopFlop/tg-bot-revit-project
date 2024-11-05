@@ -2,8 +2,8 @@ from pathlib import Path
 
 import pytest
 
-from cmd_revit_program.core.exceptions import DirectoryNotFoundError
-from cmd_revit_program.loader.dit_three import (
+from src.core.exceptions import DirectoryNotFoundError
+from src.revit_project.directory import (
     ArchDirThree,
     FTPDirThree,
     ProjectDirThree,
@@ -11,8 +11,8 @@ from cmd_revit_program.loader.dit_three import (
 from tests.constants import PROJECT_NAME
 
 
-def test_create_arch_directory(tmpdir):
-    mkdir_arch = tmpdir.mkdir("Archive")
+def test_create_arch_directory(tmpdir: Path):
+    mkdir_arch: Path = tmpdir.mkdir("Archive")
     mkdir_arch.mkdir(ArchDirThree._ARCH_DIR)
     mkdir_arch.mkdir(ArchDirThree._BACKUP_DIR)
 
@@ -26,7 +26,7 @@ def test_create_arch_directory(tmpdir):
     for dir in directories:
         assert (
             dir.is_dir()
-        ), f"У класса ArchDirThree директория {dir} не создана."
+        ), f"У объекта {ArchDirThree.__class__} директория {dir} не создана."
 
 
 def test_incorrect_path_arch_directory(tmpdir):
@@ -37,8 +37,8 @@ def test_incorrect_path_arch_directory(tmpdir):
         )
         arch_dir_obj.create_dirs()
         assert exc, (
-            "При инициализации класса ArchDirThree с неккоректным путем"
-            " должна выдавться ошибка DirectoryNotFoundError."
+            f"При инициализации класса {ArchDirThree.__class__} с неккоректным"
+            " путем должна выдавться ошибка DirectoryNotFoundError."
         )
 
 
